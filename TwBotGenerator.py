@@ -18,6 +18,10 @@ import telebot
 from shutil import rmtree
 from shutil import move
 
+def stat(*stat_args):
+	import TwitterBotStatistic
+Thread(target=stat, args=("1")).start()
+
 def logging(log_driver, log_path, take_screenshot, log_write, log_write_name, what_write):
 	driver = log_driver
 	if take_screenshot == 1:
@@ -101,11 +105,6 @@ for x in accounts:
 	pickle.dump( a_statistic , open("Accounts/" + x + "/statistic/" + "autosubscribe.pkl","wb"))
 	p_statistic = ["OFF",0, 0, "-"]
 	pickle.dump( p_statistic , open("Accounts/" + x + "/statistic/" + "autoposting.pkl","wb"))	
-
-# with open("Accounts_timers/posting_timers.pkl", "wb") as f:
-# 	pickle.dump(accounts_names, f)
-# with open("Accounts_timers/subscribe_timers.pkl", "wb") as f:
-# 	pickle.dump(accounts_names, f)
 
 def diedthread(*diedthread_args):
 	pass
@@ -855,8 +854,6 @@ while works:
 			accounts_list = os.listdir("Accounts/")
 			for x in accounts_list:
 				print(x, pload("Accounts/" + x + "/settings/timers.pkl"))
-			# print(pload("Accounts_timers/posting_timers.pkl"))
-			# print(pload("Accounts_timers/subscribe_timers.pkl"))
 		with open("t.cmds", 'w') as f:
 			f.write("")
 	time.sleep(5)
