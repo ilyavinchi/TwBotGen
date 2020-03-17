@@ -147,14 +147,7 @@ default_limit_posts = 5
 default_interval_between_posts = 2 * 60 * 60
 
 def driver_start(bot_name, headless_mode):
-	options = Options()
-	headless = headless_mode
-	if headless:
-		options.add_argument('--headless')
-		options.add_argument('--disable-gpu')
-	options.add_argument("--disable-notifications")
-	options.add_argument("--disable-extensions")
-	driver = webdriver.Chrome(options = options)
+	driver = webdriver.Chrome()
 	driver.set_window_size(1366, 768) if headless == True else driver.maximize_window()	
 	driver.get("https://twitter.com/home")
 	for cookie in pickle.load(open("Accounts/" + bot_name + "/cookies/cookies.pkl", "rb")):
@@ -165,14 +158,7 @@ def driver_start(bot_name, headless_mode):
 	return driver
 
 def url_shortener_sec(bot_name):
-	options = Options()
-	headless = True
-	if headless:
-		options.add_argument('--headless')
-		options.add_argument('--disable-gpu')
-	options.add_argument('-–incognito')
-	options.add_argument("--disable-notifications")
-	driver = webdriver.Chrome(options = options)
+	driver = webdriver.Chrome()
 	driver.set_window_size(1366, 768) if headless == True else driver.maximize_window()	
 	driver.get("https://is.gd/create.php")
 	# link_to_shorter = initialize_settings(bot_name)['offer_link']
@@ -201,14 +187,7 @@ def url_shortener_sec(bot_name):
 	return " https://is.gd/" + link_save
 
 def url_shortener_main(bot_name):
-	options = Options()
-	headless = True
-	if headless:
-		options.add_argument('--headless')
-		options.add_argument('--disable-gpu')
-	options.add_argument('-–incognito')
-	options.add_argument("--disable-notifications")
-	driver = webdriver.Chrome(options = options)
+	driver = webdriver.Chrome()
 	driver.set_window_size(1366, 768) if headless == True else driver.maximize_window()	
 	driver.get("https://is.gd/create.php")
 	# link_to_shorter = initialize_settings(bot_name)['offer_link']
@@ -587,15 +566,7 @@ def sms_get(p_tzid):
 	return 0
 
 def account_gen():
-	options = Options()
-	headless = True
-	if headless:
-		options.add_argument('--headless')
-		options.add_argument('--disable-gpu')
-	options.add_argument('-–incognito')
-	options.add_argument("--disable-notifications")
-	options.add_argument("--disable-extensions")
-	driver = webdriver.Chrome(options = options)
+	driver = webdriver.Chrome()
 	driver.set_window_size(1366, 768) if headless == True else driver.maximize_window()	
 
 	driver.get("https://www.coedcherry.com/models/random")
