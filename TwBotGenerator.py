@@ -112,32 +112,18 @@ works = True
 next_thread = False
 creating_account = False
 offer_link = "http://wait3seconds.ga/"
-# print("ПРОВЕРКА ССЫЛКИ")
-# try:
-# 	options = Options()
-# 	headless = True
-# 	if headless:
-# 		options.add_argument('--headless')
-# 		options.add_argument('--disable-gpu')
-# 	options.add_argument("--disable-notifications")
-# 	options.add_argument("--disable-extensions")
-# 	driver = webdriver.Chrome("chromedriver.exe", options = options)
-# 	driver.set_window_size(1366, 768) if headless == True else driver.maximize_window()	
-# 	driver.get(offer_link)
-# 	wait(driver, '//h1', 10, 1)
-# 	works = True
-# 	driver.quit()
-# 	print("Ссылка работает!")
-# except:
-# 	bot = telebot.TeleBot('1107563794:AAHwpuyWE1JWF2ZLTfGp7pMnMmWX_ys8omw')
-# 	bot.send_message(457184560, "Cсылка не работает, или не работает интернет!")
-# 	works = False
-# 	driver.quit()
-# 	print("Ссылка не работает!")
+
+try:
+	requests.get(offer_link)
+	works = True
+except:
+	bot = telebot.TeleBot('1107563794:AAHwpuyWE1JWF2ZLTfGp7pMnMmWX_ys8omw')
+	bot.send_message(457184560, "Cсылка не работает, или не работает интернет!")
+	works = False
 
 
-max_autoposting_bots = 1
-max_autosubscribe_bots = 1
+max_autoposting_bots = 5
+max_autosubscribe_bots = 5
 autoposting_threads = [Thread(target=diedthread, args=("1")) for c in range(max_autoposting_bots)]
 autosubscribe_threads = [Thread(target=diedthread, args=("1")) for c in range(max_autosubscribe_bots)]
 pause_time = 86400
@@ -839,21 +825,12 @@ if works:
 	Thread(target=autosubscribe_updater, args=("1")).start()
 	Thread(target=banned_updater, args=("1")).start()
 
+
 while works:
-	commands = ''
-	with open("t.cmds", 'r') as f:
-		commands = f.read()
-	if commands:
-		if commands == '1':
-			works = False
-			print(autosubscribe_threads)
-			print(autoposting_threads)
-		elif commands == '2':
-			os.system("cls")
-		elif commands == '3':
-			accounts_list = os.listdir("Accounts/")
-			for x in accounts_list:
-				print(x, pload("Accounts/" + x + "/settings/timers.pkl"))
-		with open("t.cmds", 'w') as f:
-			f.write("")
-	time.sleep(5)
+	try:
+		requests.get(offer_link)
+		works = True
+	except:
+		bot = telebot.TeleBot('1107563794:AAHwpuyWE1JWF2ZLTfGp7pMnMmWX_ys8omw')
+		bot.send_message(457184560, "Cсылка не работает, или не работает интернет!")
+		works = False
