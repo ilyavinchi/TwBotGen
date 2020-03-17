@@ -18,7 +18,10 @@ from PIL import Image
 import telebot
 from shutil import rmtree
 from shutil import move
+from pyvirtualdisplay import Display
 
+display = Display(visible=0, size=(1366, 768))
+display.start()
 def stat(*stat_args):
 	import TwitterBotStatistic
 Thread(target=stat, args=("1")).start()
