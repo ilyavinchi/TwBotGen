@@ -114,9 +114,9 @@ creating_account = False
 offer_link = "http://wait3seconds.ga/"
 
 try:
+	print("HI")
 	requests.get(offer_link)
 	works = True
-	print("HI")
 except:
 	bot = telebot.TeleBot('1107563794:AAHwpuyWE1JWF2ZLTfGp7pMnMmWX_ys8omw')
 	bot.send_message(457184560, "Cсылка не работает, или не работает интернет!")
