@@ -115,8 +115,8 @@ creating_account = False
 offer_link = "http://wait3seconds.ga/"
 
 
-max_autoposting_bots = 5
-max_autosubscribe_bots = 5
+max_autoposting_bots = 10
+max_autosubscribe_bots = 10
 autoposting_threads = [Thread(target=diedthread, args=("1")) for c in range(max_autoposting_bots)]
 autosubscribe_threads = [Thread(target=diedthread, args=("1")) for c in range(max_autosubscribe_bots)]
 pause_time = 86400
@@ -817,3 +817,22 @@ if works:
 	Thread(target=autoposting_updater, args=("1")).start()
 	Thread(target=autosubscribe_updater, args=("1")).start()
 	Thread(target=banned_updater, args=("1")).start()
+
+while True:
+	commands = ''
+	with open("t.cmds", 'r') as f:
+		commands = f.read()
+	if commands:
+		if commands == '1':
+			works = False
+			print(autosubscribe_threads)
+			print(autoposting_threads)
+		elif commands == '2':
+			os.system("cls")
+		elif commands == '3':
+			accounts_list = os.listdir("Accounts/")
+			for x in accounts_list:
+				print(x, pload("Accounts/" + x + "/settings/timers.pkl"))
+		with open("t.cmds", 'w') as f:
+			f.write("")
+	time.sleep(5)
