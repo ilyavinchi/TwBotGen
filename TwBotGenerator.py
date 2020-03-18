@@ -16,7 +16,7 @@ import pickle
 import requests
 from PIL import Image
 import telebot
-from shutil import rmtreegi
+from shutil import rmtree
 from shutil import move
 
 def stat(*stat_args):
@@ -116,8 +116,8 @@ creating_account = False
 offer_link = "http://wait3seconds.ga/"
 
 
-max_autoposting_bots = 10
-max_autosubscribe_bots = 10
+max_autoposting_bots = 8
+max_autosubscribe_bots = 8
 autoposting_threads = [Thread(target=diedthread, args=("1")) for c in range(max_autoposting_bots)]
 autosubscribe_threads = [Thread(target=diedthread, args=("1")) for c in range(max_autosubscribe_bots)]
 pause_time = 86400
@@ -216,6 +216,7 @@ def url_shortener_main(bot_name):
 	driver.find_element(By.XPATH, "//input[@id='logstats']").send_keys(Keys.SPACE)
 	driver.find_element(By.XPATH , "//input[@class='submitbutton']").submit()
 	wait(driver, "//input[@id='short_url']", 10, 2)
+	time.sleep(2)
 	# while wait(driver, "//input[@id='short_url']", 10, 2).text != ("https://is.gd/" + link_save):
 	# 	time.sleep(0.1)
 	driver.quit()
@@ -233,7 +234,7 @@ def parsing_first_type(dr, send_parsing_text, p_l):
 	driver.get(wait(driver, "//div[@role='tablist']/div[2]/a", 10, 1).get_attribute("href"))
 	driver.refresh()
 	time.sleep(2)
-	while True:
+	for x in range(30):
 		try:
 			logins = wait(driver, "//div[@dir='ltr']/span", 10, 2)
 			ready_logins = []
@@ -241,6 +242,8 @@ def parsing_first_type(dr, send_parsing_text, p_l):
 				ready_logins.append(logins[i].text.replace("@", ""))
 			return ready_logins
 		except:
+			driver.refresh()
+			time.sleep(1)
 			print("PARSING ERROR")
 			continue
 
@@ -576,6 +579,7 @@ def sms_get(p_tzid):
 	return 0
 
 def account_gen():
+	print("GEN NEW BOT")
 	options = Options()
 	headless = False
 	if headless:
@@ -597,157 +601,163 @@ def account_gen():
 	model_name = model_name.split(' ')[0] + " " + model_name.split(' ')[1]
 	logging(0, 'Accounts_logs/NewAccounts/', 0, 1, model_name, "~-~-~-~-~-~-~-~-~-~-BOT NAME: " + model_name + "-~-~-~-~-~-~-~-~-~-~")
 	os.mkdir("Accounts/" + model_name)
-	os.mkdir("Accounts/" + model_name + "/imgs")
-	logging(0, 'Accounts_logs/NewAccounts/', 0, 1, model_name, "Gen imgs")
-	pictures_href = []
-	for x in range(6):
-		pictures_href.append(pictures[x].get_attribute("href"))
+	try:
+		os.mkdir("Accounts/" + model_name + "/imgs")
+		logging(0, 'Accounts_logs/NewAccounts/', 0, 1, model_name, "Gen imgs")
+		pictures_href = []
+		for x in range(6):
+			pictures_href.append(pictures[x].get_attribute("href"))
 
-	for x in range(6):
-		driver.get(pictures_href[x])
-		pictures_second = wait(driver, "//div[@class='thumbs ']/figure/a", 10, 2)
-		
-		for z in range(len(pictures_second)):
-			with open("Accounts/" + model_name + "/imgs/" + str(uuid.uuid1()).replace("-", "")[:10] + ".jpg", 'wb') as file:
-				file.write(requests.get(pictures_second[z].get_attribute("href")).content)
+		for x in range(6):
+			driver.get(pictures_href[x])
+			pictures_second = wait(driver, "//div[@class='thumbs ']/figure/a", 10, 2)
+			
+			for z in range(len(pictures_second)):
+				with open("Accounts/" + model_name + "/imgs/" + str(uuid.uuid1()).replace("-", "")[:10] + ".jpg", 'wb') as file:
+					file.write(requests.get(pictures_second[z].get_attribute("href")).content)
 
-	logging(0, 'Accounts_logs/NewAccounts/', 0, 1, model_name, "Try get phone")
-	phone, phone_tzid = phone_gen()
-	if phone:
-		logging(0, 'Accounts_logs/NewAccounts/', 0, 1, model_name, "Get phone")
-		driver.get("https://twitter.com/i/flow/signup")
-		while True:
-			try:
-				wait(driver, "//input[@type='text']", 10, 1).send_keys(model_name)
-				wait(driver, "//input[@type='tel']", 10, 1).send_keys(phone)
-				break
-			except:
-				continue
-
-		wait(driver, "//div[@role='group']/div/div/div[1]/div/select/option[@value='" + r.randint(1,12)"']", 10, 1).click()
-		wait(driver, "//div[@role='group']/div/div/div[2]/div/select/option[@value='" + r.randint(1,28)"']", 10, 1).click()
-		wait(driver, "//div[@role='group']/div/div/div[3]/div/select/option[@value='" + r.randint(1996,2001)"']", 10, 1).click()
-
-		while True:
-			try:
-				wait(driver, "//div[@data-testid='confirmationSheetConfirm']", 1, 1).click()
-				break
-			except:
+		logging(0, 'Accounts_logs/NewAccounts/', 0, 1, model_name, "Try get phone")
+		phone, phone_tzid = phone_gen()
+		if phone:
+			logging(0, 'Accounts_logs/NewAccounts/', 0, 1, model_name, "Get phone")
+			driver.get("https://twitter.com/i/flow/signup")
+			while True:
 				try:
-					wait(driver, "//div/span/span", 1, 1).click()
+					wait(driver, "//input[@type='text']", 10, 1).send_keys(model_name)
+					wait(driver, "//input[@type='tel']", 10, 1).send_keys(phone)
+					break
 				except:
 					continue
 
-		logging(0, 'Accounts_logs/NewAccounts/', 0, 1, model_name, "Try get code")
-		code = sms_get(phone_tzid)
-		logging(0, 'Accounts_logs/NewAccounts/', 0, 1, model_name, "Code get")
-		if code == 0:
-			logging(0, 'Accounts_logs/NewAccounts/', 0, 1, model_name, "Code not get")
-			rmtree("Accounts/" + model_name)
-			return False
-		wait(driver, "//input[@name='verfication_code']", 10, 1).send_keys(code)
-		wait(driver, "//div/div/div/div[@role='button']/div/span/span", 10, 1).click()
-		acc_password = "WWW2714070" + list(model_name)[0]
-		wait(driver, "//input[@name='password']", 10, 1).send_keys(acc_password)
-		while True:
-			try:
-				wait(driver, "//div/div/div/div[@role='button']/div/span/span", 1, 1).click()
-				time.sleep(1)
-				continue
-			except:
-				break
-		logging(0, 'Accounts_logs/NewAccounts/', 0, 1, model_name, "Account create")				
-		driver.get("https://twitter.com/home")
+			wait(driver, "//div[@role='group']/div/div/div[1]/div/select/option[@value='" + str(r.randint(1,12))+"']", 10, 1).click()
+			wait(driver, "//div[@role='group']/div/div/div[2]/div/select/option[@value='" + str(r.randint(1,28))+"']", 10, 1).click()
+			wait(driver, "//div[@role='group']/div/div/div[3]/div/select/option[@value='" + str(r.randint(1996,2001))+"']", 10, 1).click()
 
-		requests.get('http://api.sms-reg.com/setOperationOk.php?tzid=' + phone_tzid + '&apikey=8t0kjwxk118uih3peiw3c8rbb7e61g62')
-		os.mkdir("Accounts/" + model_name + "/cookies")
-		pickle.dump( driver.get_cookies() , open("Accounts/" + model_name + "/cookies/cookies.pkl","wb"))
-
-		os.mkdir("Accounts/" + model_name + "/databases")
-		os.mkdir("Accounts/" + model_name + "/settings")
-		os.mkdir("Accounts/" + model_name + "/statistic")
-		a_statistic = ["OFF",0, 0]
-		pickle.dump( a_statistic , open("Accounts/" + model_name + "/statistic/" + "autosubscribe.pkl","wb"))
-		p_statistic = ["OFF",0, 0, "-"]
-		pickle.dump( p_statistic , open("Accounts/" + model_name + "/statistic/" + "autoposting.pkl","wb"))	
-		logging(0, 'Accounts_logs/NewAccounts/', 0, 1, model_name, "Files Add")
-		split_name = model_name.split(" ")
-		driver.get("https://twitter.com/settings/screen_name")
-		try_combinations = [split_name[0] + split_name[1], split_name[1] + split_name[0], split_name[1] +"_"+ split_name[0], split_name[0] +"_"+ split_name[1], split_name[1] + split_name[0] + "_", split_name[0] + split_name[1] + "_", split_name[0] + "_" + split_name[1] + "_", split_name[1] + "_" + split_name[0] + "_"]
-		last_login = ''
-		login = ''
-		time.sleep(10)
-		logging(0, 'Accounts_logs/NewAccounts/', 0, 1, model_name, "Try change name")
-		for x in range(8):
-			if driver.current_url == "https://twitter.com/settings/screen_name":
+			while True:
 				try:
-					while wait(driver, "//input", 10, 1).get_attribute("value") != "":
-						wait(driver, "//input", 10, 1).send_keys(Keys.BACK_SPACE)
-					wait(driver, "//input", 10, 1).send_keys(try_combinations[x])
-					wait(driver, '//div[@data-testid="settingsDetailSave"]', 10, 1).click()
+					wait(driver, "//div[@data-testid='confirmationSheetConfirm']", 1, 1).click()
+					break
+				except:
+					try:
+						wait(driver, "//div/span/span", 1, 1).click()
+					except:
+						continue
+
+			logging(0, 'Accounts_logs/NewAccounts/', 0, 1, model_name, "Try get code")
+			code = sms_get(phone_tzid)
+			logging(0, 'Accounts_logs/NewAccounts/', 0, 1, model_name, "Code get")
+			if code == 0:
+				logging(0, 'Accounts_logs/NewAccounts/', 0, 1, model_name, "Code not get")
+				rmtree("Accounts/" + model_name)
+				return False
+			wait(driver, "//input[@name='verfication_code']", 10, 1).send_keys(code)
+			wait(driver, "//div/div/div/div[@role='button']/div/span/span", 10, 1).click()
+			acc_password = "WWW2714070" + list(model_name)[0]
+			wait(driver, "//input[@name='password']", 10, 1).send_keys(acc_password)
+			while True:
+				try:
+					wait(driver, "//div/div/div/div[@role='button']/div/span/span", 1, 1).click()
+					time.sleep(1)
+					continue
 				except:
 					break
-			else:
-				break
-		logging(0, 'Accounts_logs/NewAccounts/', 0, 1, model_name, "Name change")
-		time.sleep(5)
-		logging(0, 'Accounts_logs/NewAccounts/', 0, 1, model_name, "Try change language")
-		login = wait(driver, "//div[@role='tablist']/div/h2", 10, 1).text
-		driver.get("https://twitter.com/settings/language")
-		wait(driver, "//option[@value='en']", 10, 1).click()
-		wait(driver, "//div/div/div/span/span", 10, 1).click()
-		driver.refresh()
-		time.sleep(2)
-		logging(0, 'Accounts_logs/NewAccounts/', 0, 1, model_name, "Language change")
-		driver.get("https://twitter.com/settings/country")
-		logging(0, 'Accounts_logs/NewAccounts/', 0, 1, model_name, "Try change country")
-		wait(driver, "//option[@value='us']", 10, 1).click()
-		wait(driver, "//div[@aria-haspopup='false'][1]", 10, 1).click()
-		logging(0, 'Accounts_logs/NewAccounts/', 0, 1, model_name, "Country change")
-		time.sleep(2)
-		driver.get("https://twitter.com/" + login)
+			logging(0, 'Accounts_logs/NewAccounts/', 0, 1, model_name, "Account create")				
+			driver.get("https://twitter.com/home")
 
-		driver.get("https://twitter.com/settings/profile")
-		logging(0, 'Accounts_logs/NewAccounts/', 0, 1, model_name, "Changing avatars")
-		list_of_images = os.listdir("Accounts/" + model_name + "/imgs/")
-		im = ''
-		for x in range(len(list_of_images)):
-			im = Image.open("Accounts/" + model_name + "/imgs/" + list_of_images[x])
-			w, h = im.size
-			if w > h:
-				im = list_of_images[x]
-				break
+			requests.get('http://api.sms-reg.com/setOperationOk.php?tzid=' + phone_tzid + '&apikey=8t0kjwxk118uih3peiw3c8rbb7e61g62')
+			os.mkdir("Accounts/" + model_name + "/cookies")
+			pickle.dump( driver.get_cookies() , open("Accounts/" + model_name + "/cookies/cookies.pkl","wb"))
 
-			im = list_of_images[r.randint(0, len(list_of_images) - 1)]
-		logging(0, 'Accounts_logs/NewAccounts/', 0, 1, model_name, "Making descriprion")
-		wait(driver, "//div[1]/div[1]/div/div/div/input[@type='file']", 10, 1).send_keys(os.path.abspath("Accounts/" + model_name + "/imgs/" + im))
-		wait(driver, "//div[2]/div[1]/div/div/div/div/div/div/div/div/div/div/div/span/span", 10, 1).click()
-		random_number_for_image = r.randint(0, len(list_of_images) - 1)
-		wait(driver, "//div[1]/div[2]/div/div/div/input[@type='file']", 10, 1).send_keys(os.path.abspath("Accounts/" + model_name + "/imgs/" + list_of_images[random_number_for_image]))
-		wait(driver, "//div[2]/div[1]/div/div/div/div/div/div/div/div/div/div/div/span/span", 10, 1).click()
-		url = url_shortener_main(model_name)
-		wait(driver, "//textarea[@name='description']", 10, 1).send_keys("Register and find me here - " + url)
-		wait(driver, "//input[@name='url']", 10, 1).send_keys(url)
-		wait(driver, "//div[1]/div/div/div/div/div/div/div/div/div/div/div/div/span/span", 10, 1).click()
-		logging(0, 'Accounts_logs/NewAccounts/', 0, 1, model_name, "Create pin post")
-		try:
-			pin_post(model_name, login)
-		except:
-			logging(0, 'Accounts_logs/NewAccounts/', 0, 1, model_name, "ERROR: NOT PIN")
-		
-		pdump("Accounts/" + model_name + "/settings/enter.pkl", [login, acc_password, phone_tzid])
-		pdump("Accounts/" + model_name + "/settings/timers.pkl", [1,1])
-		balance_info = requests.get('http://api.sms-reg.com/getBalance.php?apikey=8t0kjwxk118uih3peiw3c8rbb7e61g62')
-		balance_info = balance_info.text
-		json_balance_info = json.loads(balance_info)
-		bot = telebot.TeleBot('1107563794:AAHwpuyWE1JWF2ZLTfGp7pMnMmWX_ys8omw')
-		bot.send_message(457184560, "Ваш балланс: " + json_balance_info['balance'])
-		logging(0, 'Accounts_logs/NewAccounts/', 0, 1, model_name, "~-~-~-~-~-~-~-~-~-~-Complete making bot-~-~-~-~-~-~-~-~-~-~\n")
-		return model_name
-	else:
-		logging(0, 'Accounts_logs/NewAccounts/', 0, 1, model_name, "Phone not get")
-		rmtree("Accounts/" + model_name)
-		return False
+			os.mkdir("Accounts/" + model_name + "/databases")
+			os.mkdir("Accounts/" + model_name + "/settings")
+			os.mkdir("Accounts/" + model_name + "/statistic")
+			a_statistic = ["OFF",0, 0]
+			pickle.dump( a_statistic , open("Accounts/" + model_name + "/statistic/" + "autosubscribe.pkl","wb"))
+			p_statistic = ["OFF",0, 0, "-"]
+			pickle.dump( p_statistic , open("Accounts/" + model_name + "/statistic/" + "autoposting.pkl","wb"))	
+			logging(0, 'Accounts_logs/NewAccounts/', 0, 1, model_name, "Files Add")
+			split_name = model_name.split(" ")
+			driver.get("https://twitter.com/settings/screen_name")
+			try_combinations = [split_name[0] + split_name[1], split_name[1] + split_name[0], split_name[1] +"_"+ split_name[0], split_name[0] +"_"+ split_name[1], split_name[1] + split_name[0] + "_", split_name[0] + split_name[1] + "_", split_name[0] + "_" + split_name[1] + "_", split_name[1] + "_" + split_name[0] + "_"]
+			last_login = ''
+			login = ''
+			time.sleep(10)
+			logging(0, 'Accounts_logs/NewAccounts/', 0, 1, model_name, "Try change name")
+			for x in range(8):
+				if driver.current_url == "https://twitter.com/settings/screen_name":
+					try:
+						while wait(driver, "//input", 10, 1).get_attribute("value") != "":
+							wait(driver, "//input", 10, 1).send_keys(Keys.BACK_SPACE)
+						wait(driver, "//input", 10, 1).send_keys(try_combinations[x])
+						wait(driver, '//div[@data-testid="settingsDetailSave"]', 10, 1).click()
+					except:
+						break
+				else:
+					break
+			logging(0, 'Accounts_logs/NewAccounts/', 0, 1, model_name, "Name change")
+			time.sleep(5)
+			logging(0, 'Accounts_logs/NewAccounts/', 0, 1, model_name, "Try change language")
+			login = wait(driver, "//div[@role='tablist']/div/h2", 10, 1).text
+			driver.get("https://twitter.com/settings/language")
+			wait(driver, "//option[@value='en']", 10, 1).click()
+			wait(driver, "//div/div/div/span/span", 10, 1).click()
+			driver.refresh()
+			time.sleep(2)
+			logging(0, 'Accounts_logs/NewAccounts/', 0, 1, model_name, "Language change")
+			driver.get("https://twitter.com/settings/country")
+			logging(0, 'Accounts_logs/NewAccounts/', 0, 1, model_name, "Try change country")
+			wait(driver, "//option[@value='us']", 10, 1).click()
+			wait(driver, "//div[@aria-haspopup='false'][1]", 10, 1).click()
+			logging(0, 'Accounts_logs/NewAccounts/', 0, 1, model_name, "Country change")
+			time.sleep(2)
+			driver.get("https://twitter.com/" + login)
+
+			driver.get("https://twitter.com/settings/profile")
+			logging(0, 'Accounts_logs/NewAccounts/', 0, 1, model_name, "Changing avatars")
+			list_of_images = os.listdir("Accounts/" + model_name + "/imgs/")
+			im = ''
+			for x in range(len(list_of_images)):
+				im = Image.open("Accounts/" + model_name + "/imgs/" + list_of_images[x])
+				w, h = im.size
+				if w > h:
+					im = list_of_images[x]
+					break
+
+				im = list_of_images[r.randint(0, len(list_of_images) - 1)]
+			logging(0, 'Accounts_logs/NewAccounts/', 0, 1, model_name, "Making descriprion")
+			wait(driver, "//div[1]/div[1]/div/div/div/input[@type='file']", 10, 1).send_keys(os.path.abspath("Accounts/" + model_name + "/imgs/" + im))
+			wait(driver, "//div[2]/div[1]/div/div/div/div/div/div/div/div/div/div/div/span/span", 10, 1).click()
+			random_number_for_image = r.randint(0, len(list_of_images) - 1)
+			wait(driver, "//div[1]/div[2]/div/div/div/input[@type='file']", 10, 1).send_keys(os.path.abspath("Accounts/" + model_name + "/imgs/" + list_of_images[random_number_for_image]))
+			wait(driver, "//div[2]/div[1]/div/div/div/div/div/div/div/div/div/div/div/span/span", 10, 1).click()
+			url = url_shortener_main(model_name)
+			wait(driver, "//textarea[@name='description']", 10, 1).send_keys("Register and find me here - " + url)
+			wait(driver, "//input[@name='url']", 10, 1).send_keys(url)
+			wait(driver, "//div[1]/div/div/div/div/div/div/div/div/div/div/div/div/span/span", 10, 1).click()
+			logging(0, 'Accounts_logs/NewAccounts/', 0, 1, model_name, "Create pin post")
+			try:
+				pin_post(model_name, login)
+			except:
+				logging(0, 'Accounts_logs/NewAccounts/', 0, 1, model_name, "ERROR: NOT PIN")
+			
+			pdump("Accounts/" + model_name + "/settings/enter.pkl", [login, acc_password, phone_tzid])
+			pdump("Accounts/" + model_name + "/settings/timers.pkl", [1,1])
+			balance_info = requests.get('http://api.sms-reg.com/getBalance.php?apikey=8t0kjwxk118uih3peiw3c8rbb7e61g62')
+			balance_info = balance_info.text
+			json_balance_info = json.loads(balance_info)
+			bot = telebot.TeleBot('1107563794:AAHwpuyWE1JWF2ZLTfGp7pMnMmWX_ys8omw')
+			bot.send_message(457184560, "Ваш балланс: " + json_balance_info['balance'])
+			logging(0, 'Accounts_logs/NewAccounts/', 0, 1, model_name, "~-~-~-~-~-~-~-~-~-~-Complete making bot-~-~-~-~-~-~-~-~-~-~\n")
+			return model_name
+		else:
+			logging(0, 'Accounts_logs/NewAccounts/', 0, 1, model_name, "Phone not get")
+			rmtree("Accounts/" + model_name)
+			return False
+	except:
+			print("GEN NEW ERROR")
+			logging(0, 'Accounts_logs/NewAccounts/', 0, 1, model_name, "Phone not get")
+			rmtree("Accounts/" + model_name)
+			return False		
 
 def autoposting_updater(*autoposting_updater_args):
 	global next_thread
