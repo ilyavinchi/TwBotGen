@@ -748,12 +748,15 @@ def account_gen():
 			bot = telebot.TeleBot('1107563794:AAHwpuyWE1JWF2ZLTfGp7pMnMmWX_ys8omw')
 			bot.send_message(457184560, "Ваш балланс: " + json_balance_info['balance'])
 			logging(0, 'Accounts_logs/NewAccounts/', 0, 1, model_name, "~-~-~-~-~-~-~-~-~-~-Complete making bot-~-~-~-~-~-~-~-~-~-~\n")
+			driver.quit()
 			return model_name
 		else:
+			driver.quit()
 			logging(0, 'Accounts_logs/NewAccounts/', 0, 1, model_name, "Phone not get")
 			rmtree("Accounts/" + model_name)
 			return False
 	except:
+			driver.quit()
 			print("GEN NEW ERROR")
 			logging(0, 'Accounts_logs/NewAccounts/', 0, 1, model_name, "Phone not get")
 			rmtree("Accounts/" + model_name)
