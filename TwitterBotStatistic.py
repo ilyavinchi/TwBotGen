@@ -63,7 +63,7 @@ def send_text(message):
 	if message.text.lower() == "timers":
 		for x in accounts:
 			a = pload("Accounts/" + x + "/settings/timers.pkl")
-			string_send = x + "\nNext start posting: " + time.ctime(a[0])  + "\nNext start subscribe: " + time.ctime(a[1])
+			string_send = x + "\nNext start posting: " + time.ctime(a[0] + 7200)  + "\nNext start subscribe: " + time.ctime(a[1] + 7200)
 			bot.send_message(message.chat.id, string_send)
 
 	if message.text.isdigit() and int(message.text) < len(accounts):
