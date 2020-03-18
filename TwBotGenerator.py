@@ -30,7 +30,7 @@ def logging(log_driver, log_path, take_screenshot, log_write, log_write_name, wh
 
 	if log_write == 1:
 		if os.path.exists(log_path + log_write_name + ".txt"):
-			with open(log_path + log_write_name, 'a') as f:
+			with open(log_path + log_write_name + ".txt", 'a') as f:
 				f.write("\n" + time.ctime(time.time()) + " " + what_write)
 		else:
 			with open(log_path + log_write_name + ".txt", 'w') as f:
@@ -86,6 +86,7 @@ def changearrayval(changefile_path, change_key, change_val):
 			continue
 
 def test_accounts():
+	print(accounts)
 	for x in accounts:
 		driver = driver_start(x, False)
 		os.system("cls")
@@ -576,7 +577,7 @@ def sms_get(p_tzid):
 
 def account_gen():
 	options = Options()
-	headless = True
+	headless = False
 	if headless:
 		options.add_argument('--headless')
 		options.add_argument('--disable-gpu')
@@ -615,8 +616,14 @@ def account_gen():
 	if phone:
 		logging(0, 'Accounts_logs/NewAccounts/', 0, 1, model_name, "Get phone")
 		driver.get("https://twitter.com/i/flow/signup")
-		wait(driver, "//input[@type='text']", 10, 1).send_keys(model_name)
-		wait(driver, "//input[@type='tel']", 10, 1).send_keys(phone)
+		while True:
+			try:
+				wait(driver, "//input[@type='text']", 10, 1).send_keys(model_name)
+				wait(driver, "//input[@type='tel']", 10, 1).send_keys(phone)
+				break
+			except:
+				continue
+
 		while True:
 			try:
 				wait(driver, "//div[@data-testid='confirmationSheetConfirm']", 1, 1).click()
