@@ -16,7 +16,7 @@ import pickle
 import requests
 from PIL import Image
 import telebot
-from shutil import rmtree
+from shutil import rmtreegi
 from shutil import move
 
 def stat(*stat_args):
