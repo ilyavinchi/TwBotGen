@@ -536,8 +536,26 @@ def autosubscribe_start(botname_subscribe, limitsubscribes, startinterval, endin
 					next_thread = False
 					return False
 
+def first_post(botname_post):
+	list_of_images = os.listdir("Accounts/" + botname_post + "/imgs/")
+	driver = driver_start(botname_post, False)
+	driver.get("https://twitter.com/home")
+	random_number_for_image = r.randint(0, len(list_of_images) - 1)
+	all_texts = open("Accounts_lists/texts.txt", 'r', encoding="utf-8").read().split("\n\n")
+	contents_from_file = all_texts[r.randint(0, len(all_texts) - 1)] + url_shortener_sec(a_s[0])
+	clipboard.copy(contents_from_file)
+	el = wait(driver, "//div[@class='notranslate public-DraftEditor-content']", 10, 1)
+	el.click()
+	el.send_keys(Keys.CONTROL, 'v')
+	time.sleep(2)
+	wait(driver, "//input[@type='file']", 10, 1).send_keys(os.path.abspath("Accounts/" + botname_post + "/imgs/" + list_of_images[random_number_for_image]))
+	time.sleep(5)
+	wait(driver, "//div[@data-testid='tweetButtonInline']", 10, 1).send_keys(Keys.ENTER)
+	time.sleep(5)
+	driver.quit()
+	return True
+
 def pin_post(pin_bot_name, pin_login):
-	autoposting_start(pin_bot_name, 1, 0)
 	driver = driver_start(pin_bot_name, False)
 	driver.get("https://twitter.com/" + pin_login)
 	wait(driver, "//div[@data-testid='caret']", 10, 1).click()
@@ -736,6 +754,7 @@ def account_gen():
 			wait(driver, "//div[1]/div/div/div/div/div/div/div/div/div/div/div/div/span/span", 10, 1).click()
 			logging(0, 'Accounts_logs/NewAccounts/', 0, 1, model_name, "Create pin post")
 			try:
+				first_post(model_name)
 				pin_post(model_name, login)
 			except:
 				logging(0, 'Accounts_logs/NewAccounts/', 0, 1, model_name, "ERROR: NOT PIN")
