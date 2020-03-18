@@ -18,10 +18,7 @@ from PIL import Image
 import telebot
 from shutil import rmtree
 from shutil import move
-from pyvirtualdisplay import Display
 
-display = Display(visible=0, size=(1366, 768))
-display.start()
 def stat(*stat_args):
 	import TwitterBotStatistic
 Thread(target=stat, args=("1")).start()
@@ -154,7 +151,7 @@ def driver_start(bot_name, headless_mode):
 		options.add_argument('--disable-gpu')
 	options.add_argument("--disable-notifications")
 	options.add_argument("--disable-extensions")
-	driver = webdriver.Chrome("chromedriver", options = options)
+	driver = webdriver.Chrome("chromedriver.exe", options = options)
 	driver.set_window_size(1366, 768) if headless == True else driver.maximize_window()	
 	driver.get("https://twitter.com/home")
 	for cookie in pickle.load(open("Accounts/" + bot_name + "/cookies/cookies.pkl", "rb")):
@@ -172,7 +169,7 @@ def url_shortener_sec(bot_name):
 		options.add_argument('--disable-gpu')
 	options.add_argument('-–incognito')
 	options.add_argument("--disable-notifications")
-	driver = webdriver.Chrome("chromedriver", options = options)
+	driver = webdriver.Chrome("chromedriver.exe", options = options)
 	driver.set_window_size(1366, 768) if headless == True else driver.maximize_window()	
 	driver.get("https://is.gd/create.php")
 	# link_to_shorter = initialize_settings(bot_name)['offer_link']
@@ -208,7 +205,7 @@ def url_shortener_main(bot_name):
 		options.add_argument('--disable-gpu')
 	options.add_argument('-–incognito')
 	options.add_argument("--disable-notifications")
-	driver = webdriver.Chrome("chromedriver", options = options)
+	driver = webdriver.Chrome("chromedriver.exe", options = options)
 	driver.set_window_size(1366, 768) if headless == True else driver.maximize_window()	
 	driver.get("https://is.gd/create.php")
 	# link_to_shorter = initialize_settings(bot_name)['offer_link']
@@ -595,7 +592,7 @@ def account_gen():
 	options.add_argument('-–incognito')
 	options.add_argument("--disable-notifications")
 	options.add_argument("--disable-extensions")
-	driver = webdriver.Chrome("chromedriver", options = options)
+	driver = webdriver.Chrome("chromedriver.exe", options = options)
 	driver.set_window_size(1366, 768) if headless == True else driver.maximize_window()	
 
 	driver.get("https://www.coedcherry.com/models/random")
