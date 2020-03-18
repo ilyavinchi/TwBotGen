@@ -114,15 +114,6 @@ next_thread = False
 creating_account = False
 offer_link = "http://wait3seconds.ga/"
 
-try:
-	print("HI")
-	requests.get(offer_link)
-	works = True
-except:
-	bot = telebot.TeleBot('1107563794:AAHwpuyWE1JWF2ZLTfGp7pMnMmWX_ys8omw')
-	bot.send_message(457184560, "Cсылка не работает, или не работает интернет!")
-	works = False
-
 
 max_autoposting_bots = 5
 max_autosubscribe_bots = 5
@@ -826,13 +817,3 @@ if works:
 	Thread(target=autoposting_updater, args=("1")).start()
 	Thread(target=autosubscribe_updater, args=("1")).start()
 	Thread(target=banned_updater, args=("1")).start()
-
-
-while works:
-	try:
-		requests.get(offer_link)
-		works = True
-	except:
-		bot = telebot.TeleBot('1107563794:AAHwpuyWE1JWF2ZLTfGp7pMnMmWX_ys8omw')
-		bot.send_message(457184560, "Cсылка не работает, или не работает интернет!")
-		works = False
