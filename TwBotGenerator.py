@@ -624,6 +624,10 @@ def account_gen():
 			except:
 				continue
 
+		wait(driver, "//div[@role='group']/div/div/div[1]/div/select/option[@value='" + r.randint(1,12)"']", 10, 1).click()
+		wait(driver, "//div[@role='group']/div/div/div[2]/div/select/option[@value='" + r.randint(1,28)"']", 10, 1).click()
+		wait(driver, "//div[@role='group']/div/div/div[3]/div/select/option[@value='" + r.randint(1996,2001)"']", 10, 1).click()
+
 		while True:
 			try:
 				wait(driver, "//div[@data-testid='confirmationSheetConfirm']", 1, 1).click()
