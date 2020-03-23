@@ -386,6 +386,7 @@ def autoposting_start(botname_posting, countofposts, pause_between_posts):
 					driver.quit()
 					return False
 			if error_tries < 3:
+				driver.quit()
 				logging(driver, 'Accounts_logs/Autoposting/', 0, 1, a_s[0], "RETRY: " + str(error_tries))
 				error_tries += 1
 			else:
