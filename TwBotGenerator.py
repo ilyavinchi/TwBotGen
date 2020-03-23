@@ -155,6 +155,7 @@ def driver_start(bot_name, headless_mode):
 def access(access_driver, access_name):
 	print("Access START")
 	driver = access_driver
+	enter = pload('Accounts/' + access_name + '/settings/enter.pkl')
 	send_msg = True
 	for x in range(900):
 		if wait(driver, "//input[@id='code']", 1, 2):
@@ -165,19 +166,23 @@ def access(access_driver, access_name):
 				bot.send_message(457184560, "Введи рекапчу\n" + "Login: " + enter[0] + "\nPassword: " + enter[1])
 				send_msg = False
 			driver.refresh()
-			time.sleep(1)
+			time.sleep(2)
 			continue
+
 		bot = telebot.TeleBot('1107563794:AAHwpuyWE1JWF2ZLTfGp7pMnMmWX_ys8omw')
-		bot.send_message(457184560, "Не успел, повтори попытку через 4 часа")
+		bot.send_message(457184560, "Время ввышло")
+		driver.quit()
 		return "p"
 		
-	enter = pload('Accounts/' + access_name + '/settings/enter.pkl')
+	with open('Accounts/' + access_name + '/settings/enter.pkl', 'rb') as f:
+		enter = pickle.load(f)
 	if enter[2]:
 		for n in range(1200):
 			if works:
 				enter_info = requests.get('http://api.sms-reg.com/getNumRepeat.php?tzid=' + enter[2] + '&apikey=8t0kjwxk118uih3peiw3c8rbb7e61g62')
 				enter_info = enter_info.text
 				json_enter_info = json.loads(enter_info)
+				print(int(json_enter_info['response']))
 				if int(json_enter_info['response']) == 0:
 					driver.quit()
 					return False
@@ -193,6 +198,8 @@ def access(access_driver, access_name):
 					time.sleep(1)
 			else:
 				return True
+		driver.quit()
+		return False
 
 def url_shortener_main(bot_name):
 	options = Options()
