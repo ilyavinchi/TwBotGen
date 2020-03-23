@@ -299,9 +299,9 @@ def autoposting_start(botname_posting, countofposts, pause_between_posts):
 	error_tries = 0
 	while count_of_posts < a_s[1] and works:
 		try:
+			driver = driver_start(a_s[0], False)
 			logging(driver, 'Accounts_logs/Autoposting/', 0, 1, a_s[0], "~_~_~_~_~_~_~_~_~" + a_s[0] + "~_~_~_~_~_~_~_~_~")
 			logging(driver, 'Accounts_logs/Autoposting/', 0, 1, a_s[0], "START")
-			driver = driver_start(a_s[0], False)
 			logging(driver, 'Accounts_logs/Autoposting/', 0, 1, a_s[0], "TRY CLICK: Direct Messages")
 			wait(driver, '//a[@aria-label="Direct Messages"]', 60, 1).click()
 			try:
