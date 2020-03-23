@@ -16,22 +16,28 @@ def logging(log_driver, log_path, take_screenshot, log_write, log_write_name, wh
 			with open(log_path + log_write_name, 'w') as f:
 				f.write(time.ctime(time.time()) + " " + what_write)
 def pload(pload_path):
-	while True:
-		try:
-			with open(pload_path, "rb") as f:
-				return pickle.load(f)	
-		except:
-			time.sleep(1)
-			continue
+	if os.path.exists(pload_path):
+		while True:
+			try:
+				with open(pload_path, "rb") as f:
+					return pickle.load(f) 
+			except:
+				time.sleep(1)
+				continue
+	else:
+		a = 1/0
 def pdump(pdump_path, what_dump):
-	while True:
-		try:
-			with open(pdump_path, "wb") as f:
-				pickle.dump(what_dump, f)			
-			return True
-		except:
-			time.sleep(1)
-			continue
+	if os.path.exists(pdump_path):
+		while True:
+			try:
+				with open(pdump_path, "wb") as f:
+					pickle.dump(what_dump, f)     
+				return True
+			except:
+				time.sleep(1)
+				continue
+	else:
+		a = 1/0
 def changearrayval(changefile_path, change_key, change_val):
 	while True:
 		try:
@@ -62,9 +68,13 @@ def send_text(message):
 
 	if message.text.lower() == "timers":
 		for x in accounts:
-			a = pload("Accounts/" + x + "/settings/timers.pkl")
-			string_send = x + "\nNext start posting: " + time.ctime(a[0] + 7200)  + "\nNext start subscribe: " + time.ctime(a[1] + 7200)
-			bot.send_message(message.chat.id, string_send)
+			try:
+				a = pload("Accounts/" + x + "/settings/timers.pkl")
+				string_send = x + "\nNext start posting: " + time.ctime(a[0] + 7200)  + "\nNext start subscribe: " + time.ctime(a[1] + 7200)
+				bot.send_message(message.chat.id, string_send)
+			except Exception as e:
+				continue
+
 
 	if message.text.isdigit() and int(message.text) < len(accounts):
 		try:
@@ -83,7 +93,7 @@ def send_text(message):
 				mess = "BOTNAME: " + accounts[x] + " [" + str(x) + "]" + "\nAUTOPOSTING STAT:" + "\nstatus: " + autoposting_statistic[0] + "\nposts: " + str(autoposting_statistic[1]) + "/" + str(autoposting_statistic[2]) + "\nNext post: " + autoposting_statistic[3] + "\nAUTOSUBSCRIBE STAT:" + "\nstatus: " + autosubscribe_statistic[0] + "\ncount: " + str(autosubscribe_statistic[1]) + "/" + str(autosubscribe_statistic[2])
 				bot.send_message(message.chat.id, mess)	
 			except:
-				pass
+				continue
 
 	if message.text.lower() == "logs wait":
 		try:

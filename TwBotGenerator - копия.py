@@ -19,25 +19,6 @@ import telebot
 from shutil import rmtree
 from shutil import move
 
-def diedthread(*diedthread_args):
-	pass
-works = True
-next_thread = False
-offer_link = "http://wait3seconds.ga/"
-
-max_threads = 10
-active_threads = [Thread(target=diedthread, args=("1")) for c in range(max_threads)]
-pause_time = 86400
-
-default_limit_subscribes = 300
-default_start_interval = 60
-default_end_interval = 90
-default_parsing_limit = 5
-default_sendtext = "(nude OR sex OR tits)"
-
-default_limit_posts = 5
-default_interval_between_posts = 2 * 60 * 60
-
 def stat(*stat_args):
 	import TwitterBotStatistic
 Thread(target=stat, args=("1")).start()
@@ -54,6 +35,7 @@ def logging(log_driver, log_path, take_screenshot, log_write, log_write_name, wh
 		else:
 			with open(log_path + log_write_name + ".txt", 'w') as f:
 				f.write(time.ctime(time.time()) + " " + what_write)
+
 def wait(dr, el_info, tries, wait_type):
 	if wait_type == 1:
 		for x in range(tries*10):
@@ -61,7 +43,7 @@ def wait(dr, el_info, tries, wait_type):
 				elem = dr.find_element(By.XPATH, el_info)
 				return elem
 			except:
-				time.sleep(0.1)
+				time.sleep(0.1)	
 	elif wait_type == 2:
 		for x in range(tries*10):
 			try:
@@ -74,12 +56,13 @@ def wait(dr, el_info, tries, wait_type):
 	# print("ERROR " + el_info)
 	elem = 1/0
 	return False
+
 def pload(pload_path):
 	if os.path.exists(pload_path):
 		while True:
 			try:
 				with open(pload_path, "rb") as f:
-					return pickle.load(f) 
+					return pickle.load(f)	
 			except:
 				time.sleep(1)
 				continue
@@ -90,7 +73,7 @@ def pdump(pdump_path, what_dump):
 		while True:
 			try:
 				with open(pdump_path, "wb") as f:
-					pickle.dump(what_dump, f)     
+					pickle.dump(what_dump, f)			
 				return True
 			except:
 				time.sleep(1)
@@ -108,20 +91,6 @@ def changearrayval(changefile_path, change_key, change_val):
 			time.sleep(1)
 			continue
 
-
-accounts = os.listdir("Accounts/")
-accounts_names = {}
-# for x in accounts:
-# 	print(pload("Accounts/" + x + "/statistic/autoposting.pkl"))
-
-for x in accounts:
-	pdump("Accounts/" + x + "/settings/timers.pkl", [1,1])
-	print(pload("Accounts/" + x + "/settings/timers.pkl"))
-	a_statistic = ["OFF",0, 0]
-	pickle.dump( a_statistic , open("Accounts/" + x + "/statistic/" + "autosubscribe.pkl","wb"))
-	p_statistic = ["OFF",0, 0, "-"]
-	pickle.dump( p_statistic , open("Accounts/" + x + "/statistic/" + "autoposting.pkl","wb"))  
-
 def test_accounts():
 	print(accounts)
 	for x in accounts:
@@ -133,6 +102,37 @@ def test_accounts():
 			access(driver, x)
 		input("NEXT?: ", )
 		driver.quit()
+	
+
+accounts = os.listdir("Accounts/")
+accounts_names = {}
+for x in accounts:
+	pdump("Accounts/" + x + "/settings/timers.pkl", [1,1])
+	print(pload("Accounts/" + x + "/settings/timers.pkl"))
+	a_statistic = ["OFF",0, 0]
+	pickle.dump( a_statistic , open("Accounts/" + x + "/statistic/" + "autosubscribe.pkl","wb"))
+	p_statistic = ["OFF",0, 0, "-"]
+	pickle.dump( p_statistic , open("Accounts/" + x + "/statistic/" + "autoposting.pkl","wb"))	
+
+def diedthread(*diedthread_args):
+	pass
+works = True
+next_thread = False
+offer_link = "http://wait3seconds.ga/"
+
+
+max_threads = 10
+active_threads = [Thread(target=diedthread, args=("1")) for c in range(max_threads)]
+pause_time = 86400
+
+default_limit_subscribes = 300
+default_start_interval = 60
+default_end_interval = 90
+default_parsing_limit = 5
+default_sendtext = "(nude OR sex OR tits)"
+
+default_limit_posts = 5
+default_interval_between_posts = 2 * 60 * 60
 
 def driver_start(bot_name, headless_mode):
 	options = Options()
@@ -143,7 +143,7 @@ def driver_start(bot_name, headless_mode):
 	options.add_argument("--disable-notifications")
 	options.add_argument("--disable-extensions")
 	driver = webdriver.Chrome("chromedriver.exe", options = options)
-	driver.set_window_size(1366, 768) if headless == True else driver.maximize_window() 
+	driver.set_window_size(1366, 768) if headless == True else driver.maximize_window()	
 	driver.get("https://twitter.com/home")
 	for cookie in pickle.load(open("Accounts/" + bot_name + "/cookies/cookies.pkl", "rb")):
 		if 'expiry' in cookie:
@@ -155,6 +155,7 @@ def driver_start(bot_name, headless_mode):
 def access(access_driver, access_name):
 	print("Access START")
 	driver = access_driver
+	enter = pload('Accounts/' + access_name + '/settings/enter.pkl')
 	send_msg = True
 	for x in range(900):
 		if wait(driver, "//input[@id='code']", 1, 2):
@@ -165,19 +166,23 @@ def access(access_driver, access_name):
 				bot.send_message(457184560, "Введи рекапчу\n" + "Login: " + enter[0] + "\nPassword: " + enter[1])
 				send_msg = False
 			driver.refresh()
-			time.sleep(1)
+			time.sleep(2)
 			continue
+
 		bot = telebot.TeleBot('1107563794:AAHwpuyWE1JWF2ZLTfGp7pMnMmWX_ys8omw')
-		bot.send_message(457184560, "Не успел, повтори попытку через 4 часа")
+		bot.send_message(457184560, "Время ввышло")
+		driver.quit()
 		return "p"
 		
-	enter = pload('Accounts/' + access_name + '/settings/enter.pkl')
+	with open('Accounts/' + access_name + '/settings/enter.pkl', 'rb') as f:
+		enter = pickle.load(f)
 	if enter[2]:
 		for n in range(1200):
 			if works:
 				enter_info = requests.get('http://api.sms-reg.com/getNumRepeat.php?tzid=' + enter[2] + '&apikey=8t0kjwxk118uih3peiw3c8rbb7e61g62')
 				enter_info = enter_info.text
 				json_enter_info = json.loads(enter_info)
+				print(int(json_enter_info['response']))
 				if int(json_enter_info['response']) == 0:
 					driver.quit()
 					return False
@@ -193,39 +198,8 @@ def access(access_driver, access_name):
 					time.sleep(1)
 			else:
 				return True
-
-def url_shortener_main(bot_name):
-	options = Options()
-	headless = True
-	if headless:
-		options.add_argument('--headless')
-		options.add_argument('--disable-gpu')
-	options.add_argument('-–incognito')
-	options.add_argument("--disable-notifications")
-	driver = webdriver.Chrome("chromedriver.exe", options = options)
-	driver.set_window_size(1366, 768) if headless == True else driver.maximize_window() 
-	driver.get("https://is.gd/create.php")
-	# link_to_shorter = initialize_settings(bot_name)['offer_link']
-	link_to_shorter = offer_link
-	wait(driver, '//input[@class="urlbox"]', 10, 1).send_keys(link_to_shorter)
-	wait(driver, "//div[@id='shorturllabel']/label", 10, 1).click()
-
-	bot_name = bot_name.split(" ")
-	if len(bot_name) == 1:
-		bot_name = bot_name[0]
-	else:
-		bot_name = bot_name[0] + bot_name[1]
-
-	link_save = bot_name
-	driver.find_element(By.XPATH , "//input[@class='shorturlbox']").send_keys(link_save)
-	driver.find_element(By.XPATH, "//input[@id='logstats']").send_keys(Keys.SPACE)
-	driver.find_element(By.XPATH , "//input[@class='submitbutton']").submit()
-	wait(driver, "//input[@id='short_url']", 10, 2)
-	time.sleep(2)
-	# while wait(driver, "//input[@id='short_url']", 10, 2).textst != ("https://is.gd/" + link_save):
-	#   time.sleep(0.1)
-	driver.quit()
-	return "https://is.gd/" + link_save
+			driver.quit()
+			return "p"
 
 def url_shortener_sec(bot_name):
 	options = Options()
@@ -258,8 +232,43 @@ def url_shortener_sec(bot_name):
 	driver.find_element(By.XPATH , "//input[@class='submitbutton']").submit()
 	wait(driver, "//input[@id='short_url']", 10, 2)
 	time.sleep(2)
+	# while wait(driver, "//input[@id='short_url']", 10, 2).text != ("https://is.gd/" + link_save):
+	# 	time.sleep(0.1)
 	driver.quit()
 	return " https://is.gd/" + link_save
+
+def url_shortener_main(bot_name):
+	options = Options()
+	headless = True
+	if headless:
+		options.add_argument('--headless')
+		options.add_argument('--disable-gpu')
+	options.add_argument('-–incognito')
+	options.add_argument("--disable-notifications")
+	driver = webdriver.Chrome("chromedriver.exe", options = options)
+	driver.set_window_size(1366, 768) if headless == True else driver.maximize_window()	
+	driver.get("https://is.gd/create.php")
+	# link_to_shorter = initialize_settings(bot_name)['offer_link']
+	link_to_shorter = offer_link
+	driver.find_element(By.XPATH, "//input[@class='urlbox']").send_keys(link_to_shorter)
+	driver.find_element(By.XPATH , "//div[@id='shorturllabel']/label").click()
+
+	bot_name = bot_name.split(" ")
+	if len(bot_name) == 1:
+		bot_name = bot_name[0]
+	else:
+		bot_name = bot_name[0] + bot_name[1]
+
+	link_save = bot_name
+	driver.find_element(By.XPATH , "//input[@class='shorturlbox']").send_keys(link_save)
+	driver.find_element(By.XPATH, "//input[@id='logstats']").send_keys(Keys.SPACE)
+	driver.find_element(By.XPATH , "//input[@class='submitbutton']").submit()
+	wait(driver, "//input[@id='short_url']", 10, 2)
+	time.sleep(2)
+	# while wait(driver, "//input[@id='short_url']", 10, 2).textst != ("https://is.gd/" + link_save):
+	# 	time.sleep(0.1)
+	driver.quit()
+	return "https://is.gd/" + link_save
 
 def parsing_first_type(dr, send_parsing_text, p_l):
 	driver = dr
@@ -379,37 +388,23 @@ def autosubscribe_start(botname_subscribe, limitsubscribes, startinterval, endin
 	global next_thread
 	s_s = [botname_subscribe, limitsubscribes, startinterval, endinterval, sendtext, parsinglimit]
 	driver = driver_start(s_s[0], True)
-	for x in range(6):
+	while True:
 		try:
 			wait(driver, '//a[@aria-label="Profile"]', 10, 1).click()
 			break
 		except:
 			if driver.current_url == "https://twitter.com/account/access":
-				access_res = access(driver, a_s[0])
-				autosubscribe_statistic = ["WAIT ACCESS",0, 0]
-				pdump("Accounts/" + s_s[0] + "/statistic/" + "autosubscribe.pkl", autosubscribe_statistic)
-				if access_res == "p":
-					changearrayval('Accounts/' + a_s[0] + '/settings/timers.pkl', 0, time.sleep() + 14400)
-					changearrayval('Accounts/' + a_s[0] + '/settings/timers.pkl', 1, time.sleep() + 14400)
-					autosubscribe_statistic = ["ERROR",0, 0]
-					pdump("Accounts/" + s_s[0] + "/statistic/" + "autosubscribe.pkl", autosubscribe_statistic)
-					driver.quit()
-					next_thread = False
-					return False
-				elif access_res:
-					next_thread = False
+				next_thread = False
+				if access(driver, s_s[0]):
+					driver.refresh()
+					driver.get("https://twitter.com/home")
 					continue
 				else:
-					autosubscribe_statistic = ["ERROR",0, 0]
-					pdump("Accounts/" + s_s[0] + "/statistic/" + "autosubscribe.pkl", autosubscribe_statistic)
-					changearrayval('Accounts/' + a_s[0] + '/settings/timers.pkl', 0, False)
-					changearrayval('Accounts/' + a_s[0] + '/settings/timers.pkl', 1, False)
-					driver.quit()
+					changearrayval('Accounts/' + s_s[0] + '/settings/timers.pkl', 0, False)
+					changearrayval('Accounts/' + s_s[0] + '/settings/timers.pkl', 1, False)
 					next_thread = False
-					return False
+					break
 			continue
-		next_thread = False
-		return False
 	
 	time.sleep(5)
 	try:
@@ -429,7 +424,7 @@ def autosubscribe_start(botname_subscribe, limitsubscribes, startinterval, endin
 		count_of_realsubscribe = 0
 		error_tries = 0
 		while count_of_realsubscribe != s_s[1]:
-			try:    
+			try:		
 				if len(subscribe_base) == 0:
 					subscribe_base = parsing_first_type(driver, s_s[4], s_s[5])
 					pdump("Accounts/" + s_s[0] + "/databases/subscribe_base.pkl", subscribe_base)
@@ -437,17 +432,23 @@ def autosubscribe_start(botname_subscribe, limitsubscribes, startinterval, endin
 
 				driver.get("https://twitter.com/" + subscribe_base[0])
 				try:
-					wait(driver, "//div[@data-testid='placementTracking']", 60, 1).click()
+					wait(driver, "//div[@data-testid='placementTracking']", 10, 1).click()
 				except:
 					if driver.current_url == "https://twitter.com/account/access":
-						a = 1/0
+						if access(driver, s_s[0]):
+							continue
+						else:
+							changearrayval('Accounts/' + s_s[0] + '/settings/timers.pkl', 0, False)
+							changearrayval('Accounts/' + s_s[0] + '/settings/timers.pkl', 1, False)
+							break
+					subscribe_base.pop(0)
+					continue	
 
 				try:
 					wait(driver, '//div[@role="alert"]', 3, 1)
-					autosubscribe_statistic = ["ERROR",count_of_realsubscribe, s_s[1]]
+					autosubscribe_statistic = ["END WORK",count_of_realsubscribe, s_s[1]]
 					pdump("Accounts/" + s_s[0] + "/statistic/" + "autosubscribe.pkl", autosubscribe_statistic)
 					changearrayval('Accounts/' + s_s[0] + '/settings/timers.pkl', 1, time.time() + pause_time)
-					driver.quit()
 					return False
 				except:
 					pass
@@ -460,7 +461,6 @@ def autosubscribe_start(botname_subscribe, limitsubscribes, startinterval, endin
 					autosubscribe_statistic = ["END WORK",count_of_realsubscribe, s_s[1]]
 					pdump("Accounts/" + s_s[0] + "/statistic/" + "autosubscribe.pkl", autosubscribe_statistic)
 					changearrayval('Accounts/' + s_s[0] + '/settings/timers.pkl', 1, time.time() + pause_time)
-					driver.quit()
 					return False
 
 				if (count_of_realsubscribe != s_s[1] and len(subscribe_base) != 0):
@@ -475,37 +475,12 @@ def autosubscribe_start(botname_subscribe, limitsubscribes, startinterval, endin
 						autosubscribe_statistic = ["END WORK",count_of_realsubscribe, s_s[1]]
 						pdump("Accounts/" + s_s[0] + "/statistic/" + "autosubscribe.pkl", autosubscribe_statistic)
 						changearrayval('Accounts/' + s_s[0] + '/settings/timers.pkl', 1, time.time() + pause_time)
-						driver.quit()
 						return False
 				error_tries = 0
 			except Exception as e:
-				next_thread = False
 				print(e)
-				if driver.current_url == "https://twitter.com/account/access":
-					access_res = access(driver, a_s[0])
-					autosubscribe_statistic = ["WAIT ACCESS",0, 0]
-					pdump("Accounts/" + s_s[0] + "/statistic/" + "autosubscribe.pkl", autosubscribe_statistic)
-					if access_res == "p":
-						changearrayval('Accounts/' + a_s[0] + '/settings/timers.pkl', 0, time.sleep() + 14400)
-						changearrayval('Accounts/' + a_s[0] + '/settings/timers.pkl', 1, time.sleep() + 14400)
-						autosubscribe_statistic = ["ERROR",0, 0]
-						pdump("Accounts/" + s_s[0] + "/statistic/" + "autosubscribe.pkl", autosubscribe_statistic)
-						driver.quit()
-						next_thread = False
-						return False
-					elif access_res:
-						next_thread = False
-					else:
-						autosubscribe_statistic = ["ERROR",0, 0]
-						pdump("Accounts/" + s_s[0] + "/statistic/" + "autosubscribe.pkl", autosubscribe_statistic)
-						changearrayval('Accounts/' + a_s[0] + '/settings/timers.pkl', 0, False)
-						changearrayval('Accounts/' + a_s[0] + '/settings/timers.pkl', 1, False)
-						driver.quit()
-						next_thread = False
-						return False
 				if error_tries < 3:
 					error_tries += 1
-					continue
 				else:
 					autosubscribe_statistic = ["ERROR",0, 0]
 					pdump("Accounts/" + s_s[0] + "/statistic/" + "autosubscribe.pkl", autosubscribe_statistic)
@@ -532,33 +507,17 @@ def autosubscribe_start(botname_subscribe, limitsubscribes, startinterval, endin
 									time.sleep(r.randint(s_s[2], s_s[3]))
 							except:
 								if driver.current_url == "https://twitter.com/account/access":
-									access_res = access(driver, a_s[0])
-									autosubscribe_statistic = ["WAIT ACCESS",0, 0]
-									pdump("Accounts/" + s_s[0] + "/statistic/" + "autosubscribe.pkl", autosubscribe_statistic)
-									if access_res == "p":
-										changearrayval('Accounts/' + a_s[0] + '/settings/timers.pkl', 0, time.sleep() + 14400)
-										changearrayval('Accounts/' + a_s[0] + '/settings/timers.pkl', 1, time.sleep() + 14400)
-										autosubscribe_statistic = ["ERROR",0, 0]
-										pdump("Accounts/" + s_s[0] + "/statistic/" + "autosubscribe.pkl", autosubscribe_statistic)
-										driver.quit()
-										next_thread = False
-										return False
-									elif access_res:
-										next_thread = False
+									if access(driver, s_s[0]):
+										continue
 									else:
-										autosubscribe_statistic = ["ERROR",0, 0]
-										pdump("Accounts/" + s_s[0] + "/statistic/" + "autosubscribe.pkl", autosubscribe_statistic)
-										changearrayval('Accounts/' + a_s[0] + '/settings/timers.pkl', 0, False)
-										changearrayval('Accounts/' + a_s[0] + '/settings/timers.pkl', 1, False)
-										driver.quit()
-										next_thread = False
-										return False           
+										changearrayval('Accounts/' + s_s[0] + '/settings/timers.pkl', 0, False)
+										changearrayval('Accounts/' + s_s[0] + '/settings/timers.pkl', 1, False)
+										break							
 								continue
 						else:
 							autosubscribe_statistic = ["END DESUBSCRIBE", count_of_desubscribe, s_s[1]]
 							pdump("Accounts/" + s_s[0] + "/statistic/" + "autosubscribe.pkl", autosubscribe_statistic)
 							changearrayval('Accounts/' + s_s[0] + '/settings/timers.pkl', 1, time.time() + pause_time)
-							driver.quit()
 							return False
 					if len(followings) > 0:
 						driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
@@ -566,32 +525,9 @@ def autosubscribe_start(botname_subscribe, limitsubscribes, startinterval, endin
 					autosubscribe_statistic = ["END DESUBSCRIBE", count_of_desubscribe, s_s[1]]
 					pdump("Accounts/" + s_s[0] + "/statistic/" + "autosubscribe.pkl", autosubscribe_statistic)
 					changearrayval('Accounts/' + s_s[0] + '/settings/timers.pkl', 1, time.time() + pause_time)
-					driver.quit()
 					return False
 			except Exception as e:
 				print(e)
-				if driver.current_url == "https://twitter.com/account/access":
-					access_res = access(driver, a_s[0])
-					autosubscribe_statistic = ["WAIT ACCESS",0, 0]
-					pdump("Accounts/" + s_s[0] + "/statistic/" + "autosubscribe.pkl", autosubscribe_statistic)
-					if access_res == "p":
-						changearrayval('Accounts/' + a_s[0] + '/settings/timers.pkl', 0, time.sleep() + 14400)
-						changearrayval('Accounts/' + a_s[0] + '/settings/timers.pkl', 1, time.sleep() + 14400)
-						autosubscribe_statistic = ["ERROR",0, 0]
-						pdump("Accounts/" + s_s[0] + "/statistic/" + "autosubscribe.pkl", autosubscribe_statistic)
-						driver.quit()
-						next_thread = False
-						return False
-					elif access_res:
-						next_thread = False
-					else:
-						autosubscribe_statistic = ["ERROR",0, 0]
-						pdump("Accounts/" + s_s[0] + "/statistic/" + "autosubscribe.pkl", autosubscribe_statistic)
-						changearrayval('Accounts/' + a_s[0] + '/settings/timers.pkl', 0, False)
-						changearrayval('Accounts/' + a_s[0] + '/settings/timers.pkl', 1, False)
-						driver.quit()
-						next_thread = False
-						return False
 				if error_tries < 3:
 					error_tries += 1
 				else:
@@ -599,8 +535,8 @@ def autosubscribe_start(botname_subscribe, limitsubscribes, startinterval, endin
 					pdump("Accounts/" + s_s[0] + "/statistic/" + "autosubscribe.pkl", autosubscribe_statistic)
 					changearrayval('Accounts/' + s_s[0] + '/settings/timers.pkl', 1, time.time() + pause_time)
 					next_thread = False
-					driver.quit()
 					return False
+
 
 def first_post(botname_post, first_url):
 	list_of_images = os.listdir("Accounts/" + botname_post + "/imgs/")
@@ -626,7 +562,7 @@ def pin_post(pin_bot_name, pin_login):
 	driver.get("https://twitter.com/" + pin_login)
 	wait(driver, "//div[@data-testid='caret']", 10, 1).click()
 	wait(driver, "//div[@data-testid='pin']", 10, 1).click()
-	wait(driver, "//div[@data-testid='confirmationSheetConfirm']", 10, 1).click() 
+	wait(driver, "//div[@data-testid='confirmationSheetConfirm']", 10, 1).click()	
 	time.sleep(3)
 	driver.quit()
 
@@ -673,7 +609,7 @@ def account_gen():
 	options.add_argument("--disable-notifications")
 	options.add_argument("--disable-extensions")
 	driver = webdriver.Chrome("chromedriver.exe", options = options)
-	driver.set_window_size(1366, 768) if headless == True else driver.maximize_window() 
+	driver.set_window_size(1366, 768) if headless == True else driver.maximize_window()	
 
 	driver.get("https://www.coedcherry.com/models/random")
 	pictures = wait(driver, "//div[@class='thumbs ']/figure/a", 10, 2)
@@ -749,7 +685,7 @@ def account_gen():
 				except:
 					break
 				a = 1/0
-			logging(0, 'Accounts_logs/NewAccounts/', 0, 1, model_name, "Account create")        
+			logging(0, 'Accounts_logs/NewAccounts/', 0, 1, model_name, "Account create")				
 			driver.get("https://twitter.com/home")
 
 			requests.get('http://api.sms-reg.com/setOperationOk.php?tzid=' + phone_tzid + '&apikey=8t0kjwxk118uih3peiw3c8rbb7e61g62')
@@ -762,7 +698,7 @@ def account_gen():
 			a_statistic = ["OFF",0, 0]
 			pickle.dump( a_statistic , open("Accounts/" + model_name + "/statistic/" + "autosubscribe.pkl","wb"))
 			p_statistic = ["OFF",0, 0, "-"]
-			pickle.dump( p_statistic , open("Accounts/" + model_name + "/statistic/" + "autoposting.pkl","wb")) 
+			pickle.dump( p_statistic , open("Accounts/" + model_name + "/statistic/" + "autoposting.pkl","wb"))	
 			logging(0, 'Accounts_logs/NewAccounts/', 0, 1, model_name, "Files Add")
 			split_name = model_name.split(" ")
 			driver.get("https://twitter.com/settings/screen_name")
@@ -850,9 +786,24 @@ def account_gen():
 			print("GEN NEW ERROR")
 			logging(0, 'Accounts_logs/NewAccounts/', 0, 1, model_name, "Phone not get")
 			rmtree("Accounts/" + model_name)
-			return False    
+			return False		
 
 while works:
+	commands = ''
+	with open("t.cmds", 'r') as f:
+		commands = f.read()
+	if commands:
+		if commands == '1':
+			works = False
+		elif commands == '2':
+			os.system("cls")
+		elif commands == '3':
+			accounts_list = os.listdir("Accounts/")
+			for x in accounts_list:
+				print(x, pload("Accounts/" + x + "/settings/timers.pkl"))
+		with open("t.cmds", 'w') as f:
+			f.write("")
+
 	for x in range(max_threads):
 		if not active_threads[x].is_alive():
 			print("START NEW AUTOPOSTING")
@@ -880,7 +831,7 @@ while works:
 					print("START NEW ACCOUNT GEN")
 					thread_name = account_gen()
 				except:
-					continue  
+					continue	
 				auto_type = 0
 
 			if auto_type == 0:
@@ -893,37 +844,46 @@ while works:
 				changearrayval("Accounts/" + q + "/settings/timers.pkl", 1, "+")
 				active_threads[x] = Thread(target=autosubscribe_start, args=(thread_name, default_limit_subscribes, default_start_interval, default_end_interval, default_sendtext, default_parsing_limit))
 				active_threads[x].start()
+	time.sleep(20)
+def banned_updater(*banned_updater_args):
+	while works:
+		accounts_list = os.listdir("Accounts/")
+		for x in accounts_list:
+			timers = pload("Accounts/" + x + "/settings/timers.pkl")
+			if not timers[0] and not timers[1]:
+				while next_thread:
+					time.sleep(1)
+				pload("Accounts/" + x + "/settings/timers.pkl")
+				move('Accounts' + x, "Accounts_banned/" + x)
 
-	accounts_list = os.listdir("Accounts/")
-	for x in accounts_list:
-		timers = pload("Accounts/" + x + "/settings/timers.pkl")
-		if not timers[0] and not timers[1]:
-			while next_thread:
+		for x in range(3600):
+			if works:
 				time.sleep(1)
-			pload("Accounts/" + x + "/settings/timers.pkl")
-			move('Accounts' + x, "Accounts_banned/" + x)
-	time.sleep(30)
+			else:
+				break
 
+
+pload("he.txt")
 # if works:
-#   Thread(target=autoposting_updater, args=("1")).start()
-#   Thread(target=autosubscribe_updater, args=("1")).start()
-#   Thread(target=banned_updater, args=("1")).start()
+# 	Thread(target=autoposting_updater, args=("1")).start()
+# 	Thread(target=autosubscribe_updater, args=("1")).start()
+# 	Thread(target=banned_updater, args=("1")).start()
 
 # while True:
-#   commands = ''
-#   with open("t.cmds", 'r') as f:
-#     commands = f.read()
-#   if commands:
-#     if commands == '1':
-#       works = False
-#       print(autosubscribe_threads)
-#       print(autoposting_threads)
-#     elif commands == '2':
-#       os.system("cls")
-#     elif commands == '3':
-#       accounts_list = os.listdir("Accounts/")
-#       for x in accounts_list:
-#         print(x, pload("Accounts/" + x + "/settings/timers.pkl"))
-#     with open("t.cmds", 'w') as f:
-#       f.write("")
-#   time.sleep(5)
+# 	commands = ''
+# 	with open("t.cmds", 'r') as f:
+# 		commands = f.read()
+# 	if commands:
+# 		if commands == '1':
+# 			works = False
+# 			print(autosubscribe_threads)
+# 			print(autoposting_threads)
+# 		elif commands == '2':
+# 			os.system("cls")
+# 		elif commands == '3':
+# 			accounts_list = os.listdir("Accounts/")
+# 			for x in accounts_list:
+# 				print(x, pload("Accounts/" + x + "/settings/timers.pkl"))
+# 		with open("t.cmds", 'w') as f:
+# 			f.write("")
+# 	time.sleep(5)
