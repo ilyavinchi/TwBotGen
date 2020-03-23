@@ -392,12 +392,12 @@ def autosubscribe_start(botname_subscribe, limitsubscribes, startinterval, endin
 			break
 		except:
 			if driver.current_url == "https://twitter.com/account/access":
-				access_res = access(driver, a_s[0])
+				access_res = access(driver, s_s[0])
 				autosubscribe_statistic = ["WAIT ACCESS",0, 0]
 				pdump("Accounts/" + s_s[0] + "/statistic/" + "autosubscribe.pkl", autosubscribe_statistic)
 				if access_res == "p":
-					changearrayval('Accounts/' + a_s[0] + '/settings/timers.pkl', 0, time.sleep() + 14400)
-					changearrayval('Accounts/' + a_s[0] + '/settings/timers.pkl', 1, time.sleep() + 14400)
+					changearrayval('Accounts/' + s_s[0] + '/settings/timers.pkl', 0, time.sleep() + 14400)
+					changearrayval('Accounts/' + s_s[0] + '/settings/timers.pkl', 1, time.sleep() + 14400)
 					autosubscribe_statistic = ["ERROR",0, 0]
 					pdump("Accounts/" + s_s[0] + "/statistic/" + "autosubscribe.pkl", autosubscribe_statistic)
 					driver.quit()
@@ -409,8 +409,8 @@ def autosubscribe_start(botname_subscribe, limitsubscribes, startinterval, endin
 				else:
 					autosubscribe_statistic = ["ERROR",0, 0]
 					pdump("Accounts/" + s_s[0] + "/statistic/" + "autosubscribe.pkl", autosubscribe_statistic)
-					changearrayval('Accounts/' + a_s[0] + '/settings/timers.pkl', 0, False)
-					changearrayval('Accounts/' + a_s[0] + '/settings/timers.pkl', 1, False)
+					changearrayval('Accounts/' + s_s[0] + '/settings/timers.pkl', 0, False)
+					changearrayval('Accounts/' + s_s[0] + '/settings/timers.pkl', 1, False)
 					driver.quit()
 					next_thread = False
 					return False
@@ -489,12 +489,12 @@ def autosubscribe_start(botname_subscribe, limitsubscribes, startinterval, endin
 				next_thread = False
 				print(e)
 				if driver.current_url == "https://twitter.com/account/access":
-					access_res = access(driver, a_s[0])
+					access_res = access(driver, s_s[0])
 					autosubscribe_statistic = ["WAIT ACCESS",0, 0]
 					pdump("Accounts/" + s_s[0] + "/statistic/" + "autosubscribe.pkl", autosubscribe_statistic)
 					if access_res == "p":
-						changearrayval('Accounts/' + a_s[0] + '/settings/timers.pkl', 0, time.sleep() + 14400)
-						changearrayval('Accounts/' + a_s[0] + '/settings/timers.pkl', 1, time.sleep() + 14400)
+						changearrayval('Accounts/' + s_s[0] + '/settings/timers.pkl', 0, time.sleep() + 14400)
+						changearrayval('Accounts/' + s_s[0] + '/settings/timers.pkl', 1, time.sleep() + 14400)
 						autosubscribe_statistic = ["ERROR",0, 0]
 						pdump("Accounts/" + s_s[0] + "/statistic/" + "autosubscribe.pkl", autosubscribe_statistic)
 						driver.quit()
@@ -505,8 +505,8 @@ def autosubscribe_start(botname_subscribe, limitsubscribes, startinterval, endin
 					else:
 						autosubscribe_statistic = ["ERROR",0, 0]
 						pdump("Accounts/" + s_s[0] + "/statistic/" + "autosubscribe.pkl", autosubscribe_statistic)
-						changearrayval('Accounts/' + a_s[0] + '/settings/timers.pkl', 0, False)
-						changearrayval('Accounts/' + a_s[0] + '/settings/timers.pkl', 1, False)
+						changearrayval('Accounts/' + s_s[0] + '/settings/timers.pkl', 0, False)
+						changearrayval('Accounts/' + s_s[0] + '/settings/timers.pkl', 1, False)
 						driver.quit()
 						next_thread = False
 						return False
@@ -539,12 +539,12 @@ def autosubscribe_start(botname_subscribe, limitsubscribes, startinterval, endin
 									time.sleep(r.randint(s_s[2], s_s[3]))
 							except:
 								if driver.current_url == "https://twitter.com/account/access":
-									access_res = access(driver, a_s[0])
+									access_res = access(driver, s_s[0])
 									autosubscribe_statistic = ["WAIT ACCESS",0, 0]
 									pdump("Accounts/" + s_s[0] + "/statistic/" + "autosubscribe.pkl", autosubscribe_statistic)
 									if access_res == "p":
-										changearrayval('Accounts/' + a_s[0] + '/settings/timers.pkl', 0, time.sleep() + 14400)
-										changearrayval('Accounts/' + a_s[0] + '/settings/timers.pkl', 1, time.sleep() + 14400)
+										changearrayval('Accounts/' + s_s[0] + '/settings/timers.pkl', 0, time.sleep() + 14400)
+										changearrayval('Accounts/' + s_s[0] + '/settings/timers.pkl', 1, time.sleep() + 14400)
 										autosubscribe_statistic = ["ERROR",0, 0]
 										pdump("Accounts/" + s_s[0] + "/statistic/" + "autosubscribe.pkl", autosubscribe_statistic)
 										driver.quit()
@@ -555,8 +555,8 @@ def autosubscribe_start(botname_subscribe, limitsubscribes, startinterval, endin
 									else:
 										autosubscribe_statistic = ["ERROR",0, 0]
 										pdump("Accounts/" + s_s[0] + "/statistic/" + "autosubscribe.pkl", autosubscribe_statistic)
-										changearrayval('Accounts/' + a_s[0] + '/settings/timers.pkl', 0, False)
-										changearrayval('Accounts/' + a_s[0] + '/settings/timers.pkl', 1, False)
+										changearrayval('Accounts/' + s_s[0] + '/settings/timers.pkl', 0, False)
+										changearrayval('Accounts/' + s_s[0] + '/settings/timers.pkl', 1, False)
 										driver.quit()
 										next_thread = False
 										return False           
@@ -578,12 +578,12 @@ def autosubscribe_start(botname_subscribe, limitsubscribes, startinterval, endin
 			except Exception as e:
 				print(e)
 				if driver.current_url == "https://twitter.com/account/access":
-					access_res = access(driver, a_s[0])
+					access_res = access(driver, s_s[0])
 					autosubscribe_statistic = ["WAIT ACCESS",0, 0]
 					pdump("Accounts/" + s_s[0] + "/statistic/" + "autosubscribe.pkl", autosubscribe_statistic)
 					if access_res == "p":
-						changearrayval('Accounts/' + a_s[0] + '/settings/timers.pkl', 0, time.sleep() + 14400)
-						changearrayval('Accounts/' + a_s[0] + '/settings/timers.pkl', 1, time.sleep() + 14400)
+						changearrayval('Accounts/' + s_s[0] + '/settings/timers.pkl', 0, time.sleep() + 14400)
+						changearrayval('Accounts/' + s_s[0] + '/settings/timers.pkl', 1, time.sleep() + 14400)
 						autosubscribe_statistic = ["ERROR",0, 0]
 						pdump("Accounts/" + s_s[0] + "/statistic/" + "autosubscribe.pkl", autosubscribe_statistic)
 						driver.quit()
@@ -594,8 +594,8 @@ def autosubscribe_start(botname_subscribe, limitsubscribes, startinterval, endin
 					else:
 						autosubscribe_statistic = ["ERROR",0, 0]
 						pdump("Accounts/" + s_s[0] + "/statistic/" + "autosubscribe.pkl", autosubscribe_statistic)
-						changearrayval('Accounts/' + a_s[0] + '/settings/timers.pkl', 0, False)
-						changearrayval('Accounts/' + a_s[0] + '/settings/timers.pkl', 1, False)
+						changearrayval('Accounts/' + s_s[0] + '/settings/timers.pkl', 0, False)
+						changearrayval('Accounts/' + s_s[0] + '/settings/timers.pkl', 1, False)
 						driver.quit()
 						next_thread = False
 						return False
