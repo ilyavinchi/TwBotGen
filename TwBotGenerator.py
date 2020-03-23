@@ -318,6 +318,8 @@ def autoposting_start(botname_posting, countofposts, pause_between_posts):
 				pass
 
 			driver.get("https://twitter.com/home")
+			time.sleep(1)
+			driver.refresh()
 			logging(driver, 'Accounts_logs/Autoposting/', 0, 1, a_s[0], "START POSTING")
 			random_number_for_image = r.randint(0, len(list_of_images) - 1)
 			all_texts = open("Accounts_lists/texts.txt", 'r', encoding="utf-8").read().split("\n\n")
