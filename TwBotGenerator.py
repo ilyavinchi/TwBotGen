@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import time
 import os
 import sys
@@ -108,11 +107,10 @@ def changearrayval(changefile_path, change_key, change_val):
 			time.sleep(1)
 			continue
 
-
 accounts = os.listdir("Accounts/")
 accounts_names = {}
 # for x in accounts:
-# 	print(pload("Accounts/" + x + "/statistic/autoposting.pkl"))
+# print(pload("Accounts/" + x + "/statistic/autoposting.pkl"))
 
 for x in accounts:
 	pdump("Accounts/" + x + "/settings/timers.pkl", [1,1])
@@ -301,22 +299,29 @@ def autoposting_start(botname_posting, countofposts, pause_between_posts):
 	error_tries = 0
 	while count_of_posts < a_s[1] and works:
 		try:
+			logging(driver, 'Accounts_logs/Autoposting/', 0, 1, a_s[0], "~_~_~_~_~_~_~_~_~" + a_s[0] + "~_~_~_~_~_~_~_~_~")
+			logging(driver, 'Accounts_logs/Autoposting/', 0, 1, a_s[0], "START")
 			driver = driver_start(a_s[0], False)
+			logging(driver, 'Accounts_logs/Autoposting/', 0, 1, a_s[0], "TRY CLICK: Direct Messages")
 			wait(driver, '//a[@aria-label="Direct Messages"]', 60, 1).click()
 			try:
-				elem = dr.find_element(By.XPATH, el_info)
+				logging(driver, 'Accounts_logs/Autoposting/', 0, 1, a_s[0], "BAN CHECK")
 				wait(driver, '//div[@role="alert"]', 3, 1)
+				logging(driver, 'Accounts_logs/Autoposting/', 0, 1, a_s[0], "BAN FIND")
 				changearrayval('Accounts/' + a_s[0] + '/settings/timers.pkl', 0, False)
 				changearrayval('Accounts/' + a_s[0] + '/settings/timers.pkl', 1, False)
 				next_thread = False
 				driver.quit()
 				return False
 			except:
+				logging(driver, 'Accounts_logs/Autoposting/', 0, 1, a_s[0], "NOT BANNED")
 				pass
 
 			driver.get("https://twitter.com/home")
+			logging(driver, 'Accounts_logs/Autoposting/', 0, 1, a_s[0], "START POSTING")
 			random_number_for_image = r.randint(0, len(list_of_images) - 1)
 			all_texts = open("Accounts_lists/texts.txt", 'r', encoding="utf-8").read().split("\n\n")
+			logging(driver, 'Accounts_logs/Autoposting/', 0, 1, a_s[0], "TRY GET SHORT URL")
 			contents_from_file = all_texts[r.randint(0, len(all_texts) - 1)] + url_shortener_sec(a_s[0])
 			clipboard.copy(contents_from_file)
 			el = wait(driver, "//div[@class='notranslate public-DraftEditor-content']", 10, 1)
@@ -326,13 +331,15 @@ def autoposting_start(botname_posting, countofposts, pause_between_posts):
 			wait(driver, "//input[@type='file']", 10, 1).send_keys(os.path.abspath("Accounts/" + a_s[0] + "/imgs/" + list_of_images[random_number_for_image]))
 			time.sleep(5)
 			wait(driver, "//div[@data-testid='tweetButtonInline']", 10, 1).send_keys(Keys.ENTER)
+			logging(driver, 'Accounts_logs/Autoposting/', 0, 1, a_s[0], "POST ADD: " + str(count_of_posts) + "/" + str(a_s[1]))
 			time.sleep(5)
 			count_of_posts += 1
 			driver.quit()
 			next_thread = False
-			if count_of_posts < a_s[1]:
+			if count_of_posts < a_s[1]:		
 				time_next_post = time.ctime(time.time() + a_s[2]).split(" ")[3]
-				autoposting_statistic = ["WORKING",count_of_posts, a_s[1], time_next_post]
+				logging(driver, 'Accounts_logs/Autoposting/', 0, 1, a_s[0], "TIME TO NEXT POST: " + str(time_next_post))
+				autoposting_statistic = ["WORKING", count_of_posts, a_s[1], time_next_post]
 				pickle.dump( autoposting_statistic , open("Accounts/" + a_s[0] + "/statistic/" + "autoposting.pkl","wb"))
 				for x in range(a_s[2]):
 					if works:
@@ -344,20 +351,23 @@ def autoposting_start(botname_posting, countofposts, pause_between_posts):
 						pdump("Accounts/" + a_s[0] + "/statistic/" + "autoposting.pkl", autoposting_statistic)
 						return False
 			else:
-				next_thread = False
+				logging(driver, 'Accounts_logs/Autoposting/', 0, 1, a_s[0], "WORK END")
 				changearrayval('Accounts/' + a_s[0] + '/settings/timers.pkl', 0, time.time() + pause_time)
 				autoposting_statistic = ["END WORK",count_of_posts, a_s[1], "--:--:--"]
 				pdump("Accounts/" + a_s[0] + "/statistic/" + "autoposting.pkl", autoposting_statistic)
 				return False
 			error_tries = 0
 		except Exception as e:
+			logging(driver, 'Accounts_logs/Autoposting/', 0, 1, a_s[0], "ERROR")
 			next_thread = False
 			print(e)
 			if driver.current_url == "https://twitter.com/account/access":
+				logging(driver, 'Accounts_logs/Autoposting/', 0, 1, a_s[0], "WAIT ACCES")
 				access_res = access(driver, a_s[0])
 				autoposting_statistic = ["Wait ACCESS", 0, 0, "-"]
 				pdump("Accounts/" + a_s[0] + "/statistic/" + "autoposting.pkl", autoposting_statistic)
 				if access_res == "p":
+					logging(driver, 'Accounts_logs/Autoposting/', 0, 1, a_s[0], "PAUSE")
 					changearrayval('Accounts/' + a_s[0] + '/settings/timers.pkl', 0, time.sleep() + 14400)
 					changearrayval('Accounts/' + a_s[0] + '/settings/timers.pkl', 1, time.sleep() + 14400)
 					autoposting_statistic = ["ERROR", 0, 0, "-"]
@@ -365,8 +375,10 @@ def autoposting_start(botname_posting, countofposts, pause_between_posts):
 					driver.quit()
 					return False
 				elif access_res:
+					logging(driver, 'Accounts_logs/Autoposting/', 0, 1, a_s[0], "ACCESS ACCEPT")
 					continue
 				else:
+					logging(driver, 'Accounts_logs/Autoposting/', 0, 1, a_s[0], "ACCOUNT BANNED")
 					autoposting_statistic = ["ERROR", 0, 0, "-"]
 					pdump("Accounts/" + a_s[0] + "/statistic/" + "autoposting.pkl", autoposting_statistic)
 					changearrayval('Accounts/' + a_s[0] + '/settings/timers.pkl', 0, False)
@@ -374,8 +386,10 @@ def autoposting_start(botname_posting, countofposts, pause_between_posts):
 					driver.quit()
 					return False
 			if error_tries < 3:
+				logging(driver, 'Accounts_logs/Autoposting/', 0, 1, a_s[0], "RETRY: " + str(error_tries))
 				error_tries += 1
 			else:
+				logging(driver, 'Accounts_logs/Autoposting/', 0, 1, a_s[0], "COMPLETELY ERROR: " + e)
 				driver.quit()
 				autoposting_statistic = ["ERROR", 0, 0, "-"]
 				pdump("Accounts/" + a_s[0] + "/statistic/" + "autoposting.pkl", autoposting_statistic)
@@ -386,16 +400,20 @@ def autosubscribe_start(botname_subscribe, limitsubscribes, startinterval, endin
 	global next_thread
 	s_s = [botname_subscribe, limitsubscribes, startinterval, endinterval, sendtext, parsinglimit]
 	driver = driver_start(s_s[0], True)
+	logging(driver, 'Accounts_logs/Autosubscribe/', 0, 1, s_s[0], "~_~_~_~_~_~_~_~_~" + s_s[0] + "~_~_~_~_~_~_~_~_~")
 	for x in range(6):
 		try:
+			logging(driver, 'Accounts_logs/Autosubscribe/', 0, 1, s_s[0], "TRY CLICK PROFILE")
 			wait(driver, '//a[@aria-label="Profile"]', 10, 1).click()
 			break
 		except:
 			if driver.current_url == "https://twitter.com/account/access":
+				logging(driver, 'Accounts_logs/Autosubscribe/', 0, 1, s_s[0], "ACCESS")
 				access_res = access(driver, s_s[0])
 				autosubscribe_statistic = ["WAIT ACCESS",0, 0]
 				pdump("Accounts/" + s_s[0] + "/statistic/" + "autosubscribe.pkl", autosubscribe_statistic)
 				if access_res == "p":
+					logging(driver, 'Accounts_logs/Autosubscribe/', 0, 1, s_s[0], "ACCESS PAUSE")
 					changearrayval('Accounts/' + s_s[0] + '/settings/timers.pkl', 0, time.sleep() + 14400)
 					changearrayval('Accounts/' + s_s[0] + '/settings/timers.pkl', 1, time.sleep() + 14400)
 					autosubscribe_statistic = ["ERROR",0, 0]
@@ -404,9 +422,11 @@ def autosubscribe_start(botname_subscribe, limitsubscribes, startinterval, endin
 					next_thread = False
 					return False
 				elif access_res:
+					logging(driver, 'Accounts_logs/Autosubscribe/', 0, 1, s_s[0], "ACCESS SUCCES")
 					next_thread = False
 					continue
 				else:
+					logging(driver, 'Accounts_logs/Autosubscribe/', 0, 1, s_s[0], "BOT BANNED")
 					autosubscribe_statistic = ["ERROR",0, 0]
 					pdump("Accounts/" + s_s[0] + "/statistic/" + "autosubscribe.pkl", autosubscribe_statistic)
 					changearrayval('Accounts/' + s_s[0] + '/settings/timers.pkl', 0, False)
@@ -427,6 +447,7 @@ def autosubscribe_start(botname_subscribe, limitsubscribes, startinterval, endin
 	
 	next_thread = False
 	if following_count < 4000:
+		logging(driver, 'Accounts_logs/Autosubscribe/', 0, 1, s_s[0], "START FOLLOWING")
 		subscribe_base = []
 		if os.path.exists("Accounts/" + s_s[0] + "/databases/subscribe_base.pkl"):
 			subscribe_base = pload("Accounts/" + s_s[0] + "/databases/subscribe_base.pkl")
@@ -436,7 +457,8 @@ def autosubscribe_start(botname_subscribe, limitsubscribes, startinterval, endin
 		count_of_realsubscribe = 0
 		error_tries = 0
 		while count_of_realsubscribe != s_s[1]:
-			try:    
+			try:   
+			logging(driver, 'Accounts_logs/Autosubscribe/', 0, 1, s_s[0], "TRY FOLLOWING")
 				if len(subscribe_base) == 0:
 					subscribe_base = parsing_first_type(driver, s_s[4], s_s[5])
 					pdump("Accounts/" + s_s[0] + "/databases/subscribe_base.pkl", subscribe_base)
@@ -450,7 +472,9 @@ def autosubscribe_start(botname_subscribe, limitsubscribes, startinterval, endin
 						a = 1/0
 
 				try:
+					logging(driver, 'Accounts_logs/Autosubscribe/', 0, 1, s_s[0], "FIND ALLERT")
 					wait(driver, '//div[@role="alert"]', 3, 1)
+					logging(driver, 'Accounts_logs/Autosubscribe/', 0, 1, s_s[0], "ALLERT")
 					autosubscribe_statistic = ["ERROR",count_of_realsubscribe, s_s[1]]
 					pdump("Accounts/" + s_s[0] + "/statistic/" + "autosubscribe.pkl", autosubscribe_statistic)
 					changearrayval('Accounts/' + s_s[0] + '/settings/timers.pkl', 1, time.time() + pause_time)
@@ -464,6 +488,7 @@ def autosubscribe_start(botname_subscribe, limitsubscribes, startinterval, endin
 				pdump("Accounts/" + s_s[0] + "/databases/subscribe_base.pkl", subscribe_base)
 
 				if not works:
+					logging(driver, 'Accounts_logs/Autosubscribe/', 0, 1, s_s[0], "STOP WORK")
 					autosubscribe_statistic = ["END WORK",count_of_realsubscribe, s_s[1]]
 					pdump("Accounts/" + s_s[0] + "/statistic/" + "autosubscribe.pkl", autosubscribe_statistic)
 					changearrayval('Accounts/' + s_s[0] + '/settings/timers.pkl', 1, time.time() + pause_time)
@@ -471,14 +496,17 @@ def autosubscribe_start(botname_subscribe, limitsubscribes, startinterval, endin
 					return False
 
 				if (count_of_realsubscribe != s_s[1] and len(subscribe_base) != 0):
+					logging(driver, 'Accounts_logs/Autosubscribe/', 0, 1, s_s[0], "SUCCES END SUB " + str(count_of_realsubscribe) + "/" + str(s_s[1]))
 					autosubscribe_statistic = ["WORKING",count_of_realsubscribe, s_s[1]]
 					pdump("Accounts/" + s_s[0] + "/statistic/" + "autosubscribe.pkl", autosubscribe_statistic)
 					time.sleep(r.randint(s_s[2], s_s[3]))
 				else:
 					if count_of_realsubscribe != s_s[1]:
+						logging(driver, 'Accounts_logs/Autosubscribe/', 0, 1, s_s[0], "PARSING")
 						autosubscribe_statistic = ["Parsing",count_of_realsubscribe, s_s[1]]
 						pdump("Accounts/" + s_s[0] + "/statistic/" + "autosubscribe.pkl", autosubscribe_statistic)
 					else:
+						logging(driver, 'Accounts_logs/Autosubscribe/', 0, 1, s_s[0], "END WORK")
 						autosubscribe_statistic = ["END WORK",count_of_realsubscribe, s_s[1]]
 						pdump("Accounts/" + s_s[0] + "/statistic/" + "autosubscribe.pkl", autosubscribe_statistic)
 						changearrayval('Accounts/' + s_s[0] + '/settings/timers.pkl', 1, time.time() + pause_time)
@@ -486,40 +514,46 @@ def autosubscribe_start(botname_subscribe, limitsubscribes, startinterval, endin
 						return False
 				error_tries = 0
 			except Exception as e:
+				logging(driver, 'Accounts_logs/Autosubscribe/', 0, 1, s_s[0], "ERROR " + e)
 				next_thread = False
 				print(e)
 				if driver.current_url == "https://twitter.com/account/access":
+					logging(driver, 'Accounts_logs/Autosubscribe/', 0, 1, s_s[0], "ACCESS")
 					access_res = access(driver, s_s[0])
 					autosubscribe_statistic = ["WAIT ACCESS",0, 0]
 					pdump("Accounts/" + s_s[0] + "/statistic/" + "autosubscribe.pkl", autosubscribe_statistic)
 					if access_res == "p":
+						logging(driver, 'Accounts_logs/Autosubscribe/', 0, 1, s_s[0], "ACCESS PAUSE")
 						changearrayval('Accounts/' + s_s[0] + '/settings/timers.pkl', 0, time.sleep() + 14400)
 						changearrayval('Accounts/' + s_s[0] + '/settings/timers.pkl', 1, time.sleep() + 14400)
 						autosubscribe_statistic = ["ERROR",0, 0]
 						pdump("Accounts/" + s_s[0] + "/statistic/" + "autosubscribe.pkl", autosubscribe_statistic)
-						driver.quit()
-						next_thread = False
+						driver.quit()						
 						return False
 					elif access_res:
+						logging(driver, 'Accounts_logs/Autosubscribe/', 0, 1, s_s[0], "ACCESS SUCCES")
 						next_thread = False
 					else:
+						logging(driver, 'Accounts_logs/Autosubscribe/', 0, 1, s_s[0], "BOT BANNED")
 						autosubscribe_statistic = ["ERROR",0, 0]
 						pdump("Accounts/" + s_s[0] + "/statistic/" + "autosubscribe.pkl", autosubscribe_statistic)
 						changearrayval('Accounts/' + s_s[0] + '/settings/timers.pkl', 0, False)
 						changearrayval('Accounts/' + s_s[0] + '/settings/timers.pkl', 1, False)
-						driver.quit()
-						next_thread = False
+						driver.quit()						
 						return False
 				if error_tries < 3:
+					logging(driver, 'Accounts_logs/Autosubscribe/', 0, 1, s_s[0], "ERROR TRIES: " + str(error_tries))
 					error_tries += 1
 					continue
 				else:
+					logging(driver, 'Accounts_logs/Autosubscribe/', 0, 1, s_s[0], "TRIES END")
 					autosubscribe_statistic = ["ERROR",0, 0]
 					pdump("Accounts/" + s_s[0] + "/statistic/" + "autosubscribe.pkl", autosubscribe_statistic)
-					changearrayval('Accounts/' + s_s[0] + '/settings/timers.pkl', 1, time.time() + pause_time)
-					next_thread = False
+					changearrayval('Accounts/' + s_s[0] + '/settings/timers.pkl', 1, time.time() + pause_time)	
+					driver.quit()				
 					return False
 	else:
+		logging(driver, 'Accounts_logs/Autosubscribe/', 0, 1, s_s[0], "START UNFOLLOWING")
 		count_of_desubscribe = 0 
 		driver.get(driver.current_url + "/following")
 		error_tries = 0
@@ -577,6 +611,7 @@ def autosubscribe_start(botname_subscribe, limitsubscribes, startinterval, endin
 					return False
 			except Exception as e:
 				print(e)
+				next_thread = False
 				if driver.current_url == "https://twitter.com/account/access":
 					access_res = access(driver, s_s[0])
 					autosubscribe_statistic = ["WAIT ACCESS",0, 0]
@@ -587,17 +622,15 @@ def autosubscribe_start(botname_subscribe, limitsubscribes, startinterval, endin
 						autosubscribe_statistic = ["ERROR",0, 0]
 						pdump("Accounts/" + s_s[0] + "/statistic/" + "autosubscribe.pkl", autosubscribe_statistic)
 						driver.quit()
-						next_thread = False
 						return False
 					elif access_res:
-						next_thread = False
+						pass
 					else:
 						autosubscribe_statistic = ["ERROR",0, 0]
 						pdump("Accounts/" + s_s[0] + "/statistic/" + "autosubscribe.pkl", autosubscribe_statistic)
 						changearrayval('Accounts/' + s_s[0] + '/settings/timers.pkl', 0, False)
 						changearrayval('Accounts/' + s_s[0] + '/settings/timers.pkl', 1, False)
 						driver.quit()
-						next_thread = False
 						return False
 				if error_tries < 3:
 					error_tries += 1
@@ -605,7 +638,6 @@ def autosubscribe_start(botname_subscribe, limitsubscribes, startinterval, endin
 					autosubscribe_statistic = ["ERROR",0, 0]
 					pdump("Accounts/" + s_s[0] + "/statistic/" + "autosubscribe.pkl", autosubscribe_statistic)
 					changearrayval('Accounts/' + s_s[0] + '/settings/timers.pkl', 1, time.time() + pause_time)
-					next_thread = False
 					driver.quit()
 					return False
 
@@ -908,7 +940,7 @@ while works:
 			while next_thread:
 				time.sleep(1)
 			pload("Accounts/" + x + "/settings/timers.pkl")
-			move('Accounts' + x, "Accounts_banned/" + x)
+			move('Accounts/' + x, "Accounts_banned/" + x)
 	time.sleep(30)
 
 # if works:
