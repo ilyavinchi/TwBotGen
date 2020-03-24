@@ -272,12 +272,9 @@ def parsing_first_type(dr, send_parsing_text, p_l):
 	el = wait(driver, "//input[@data-testid='SearchBox_Search_Input']", 10, 1)
 	el.click()
 	el.send_keys(send_parsing_text)
-	time.sleep(2)
-	wait(driver, "//div[@id='typeaheadDropdown-1']/div[2]", 10, 1).click()
-	time.sleep(2)
+	el.send_keys(Keys.ENTER)
 	driver.get(wait(driver, "//div[@role='tablist']/div[2]/a", 10, 1).get_attribute("href"))
 	driver.refresh()
-	time.sleep(2)
 	for x in range(30):
 		try:
 			logins = wait(driver, "//div[@dir='ltr']/span", 10, 2)
