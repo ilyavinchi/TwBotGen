@@ -17,7 +17,7 @@ from PIL import Image
 import telebot
 from shutil import rmtree
 from shutil import move
-print("ABDREY DOLBAEB")
+
 def diedthread(*diedthread_args):
 	pass
 works = True
@@ -466,6 +466,8 @@ def autosubscribe_start(botname_subscribe, limitsubscribes, startinterval, endin
 					pdump("Accounts/" + s_s[0] + "/statistic/" + "autosubscribe.pkl", autosubscribe_statistic)
 					subscribe_base = parsing_first_type(driver, s_s[4], s_s[5])
 					pdump("Accounts/" + s_s[0] + "/databases/subscribe_base.pkl", subscribe_base)
+					autosubscribe_statistic = ["Parsing end, wait time", count_of_realsubscribe, s_s[1]]
+					pdump("Accounts/" + s_s[0] + "/statistic/" + "autosubscribe.pkl", autosubscribe_statistic)
 					time.sleep(r.randint(s_s[2], s_s[3]))
 
 				driver.get("https://twitter.com/" + subscribe_base[0])
