@@ -70,7 +70,6 @@ def wait(dr, el_info, tries, wait_type):
 				time.sleep(0.1)
 
 	logging(0, 'Accounts_logs/Wait/', 0, 1, 'waitlogs', "ERROR " + el_info)
-	# print("ERROR " + el_info)
 	elem = 1/0
 	return False
 def pload(pload_path):
@@ -273,17 +272,19 @@ def parsing_first_type(dr, send_parsing_text, p_l):
 	el.click()
 	el.send_keys(send_parsing_text)
 	el.send_keys(Keys.ENTER)
-	driver.get(wait(driver, "//div[@role='tablist']/div[2]/a", 10, 1).get_attribute("href"))
+	# driver.get(wait(driver, "//nav/div[@role='tablist']/div[2]/a", 10, 1).get_attribute("href"))
+	wait(driver, '//nav/div[@role="tablist"]/div[2]/a/div', 10, 1).click()
 	driver.refresh()
-	for x in range(30):
+	for x in range(60):
 		try:
-			logins = wait(driver, "//div[@dir='ltr']/span", 10, 2)
+			logins = wait(driver, '//div[@data-testid="tweet"]/div/div/div/div/div/div/a/div/div[2]', 10, 2)
 			ready_logins = []
 			for i in range(p_l):
-				ready_logins.append(logins[i].text.replace("@", ""))
+				user_name = logins[i].text.replace("@", "")
+				if user_name:
+					ready_logins.append(user_name)
 			return ready_logins
 		except:
-			driver.refresh()
 			time.sleep(1)
 			print("PARSING ERROR")
 			continue
