@@ -268,7 +268,7 @@ def url_shortener_sec(bot_name):
 
 def parsing_first_type(dr, send_parsing_text, p_l):
 	driver = dr
-	driver.get("https://twitter.com/search")
+	wait(driver, '//a[@data-testid="AppTabBar_Explore_Link"]/div', 10, 1).click()
 	el = wait(driver, "//input[@data-testid='SearchBox_Search_Input']", 10, 1)
 	el.click()
 	el.send_keys(send_parsing_text)
