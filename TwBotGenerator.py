@@ -896,6 +896,7 @@ def account_gen():
 
 while works:
 	for x in range(max_threads):
+		print("THREAD ID: " + str(x))
 		if not active_threads[x].is_alive():
 			print("START NEW AUTOPOSTING")
 			while next_thread:
