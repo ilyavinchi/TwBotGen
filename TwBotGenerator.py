@@ -895,7 +895,6 @@ while works:
 	for x in range(max_threads):
 		print("THREAD ID: " + str(x))
 		if not active_threads[x].is_alive():
-			print("START NEW AUTOPOSTING")
 			while next_thread:
 				time.sleep(1)
 			next_thread = True
@@ -944,6 +943,7 @@ while works:
 			move('Accounts/' + x, "Accounts_banned/" + x)
 
 	for x in range(30):
+		time.sleep(1)
 		print("PAUSE: " + str(30 - x))
 
 # if works:
