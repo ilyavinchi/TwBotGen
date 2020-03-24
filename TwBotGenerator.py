@@ -397,7 +397,7 @@ def autoposting_start(botname_posting, countofposts, pause_between_posts):
 				autoposting_statistic = ["ERROR", 0, 0, "-"]
 				pdump("Accounts/" + a_s[0] + "/statistic/" + "autoposting.pkl", autoposting_statistic)
 				changearrayval('Accounts/' + a_s[0] + '/settings/timers.pkl', 0, time.time() + pause_time)
-					return False
+				return False
 
 def autosubscribe_start(botname_subscribe, limitsubscribes, startinterval, endinterval, sendtext, parsinglimit):
 	global next_thread
