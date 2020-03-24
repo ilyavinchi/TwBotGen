@@ -893,10 +893,10 @@ def account_gen():
 while works:
 	print("MAIN START")
 	for x in range(max_threads):
-		print("THREAD ID: " + str(x))
 		if not active_threads[x].is_alive():
 			while next_thread:
 				time.sleep(1)
+			print("NEW THREAD ID: " + str(x))
 			next_thread = True
 			thread_name = False
 			auto_type = False
