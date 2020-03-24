@@ -17,7 +17,7 @@ from PIL import Image
 import telebot
 from shutil import rmtree
 from shutil import move
-
+print("ABDREY DOLBAEB")
 def diedthread(*diedthread_args):
 	pass
 works = True
