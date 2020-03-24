@@ -513,7 +513,7 @@ def autosubscribe_start(botname_subscribe, limitsubscribes, startinterval, endin
 						return False
 				error_tries = 0
 			except Exception as e:
-				logging(driver, 'Accounts_logs/Autosubscribe/', 0, 1, s_s[0], "ERROR " + e)
+				logging(driver, 'Accounts_logs/Autosubscribe/', 0, 1, s_s[0], "ERROR")
 				next_thread = False
 				print(e)
 				if driver.current_url == "https://twitter.com/account/access":
