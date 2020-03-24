@@ -452,10 +452,10 @@ def autosubscribe_start(botname_subscribe, limitsubscribes, startinterval, endin
 	if following_count < 4000:
 		logging(driver, 'Accounts_logs/Autosubscribe/', 0, 1, s_s[0], "START FOLLOWING")
 		subscribe_base = []
-		if os.path.exists("Accounts/" + s_s[0] + "/databases/subscribe_base.pkl"):
-			subscribe_base = pload("Accounts/" + s_s[0] + "/databases/subscribe_base.pkl")
-		else:
-			subscribe_base = []
+		# if os.path.exists("Accounts/" + s_s[0] + "/databases/subscribe_base.pkl"):
+		# 	subscribe_base = pload("Accounts/" + s_s[0] + "/databases/subscribe_base.pkl")
+		# else:
+		# 	subscribe_base = []
 
 		count_of_realsubscribe = 0
 		error_tries = 0
@@ -463,6 +463,9 @@ def autosubscribe_start(botname_subscribe, limitsubscribes, startinterval, endin
 			try:   
 				logging(driver, 'Accounts_logs/Autosubscribe/', 0, 1, s_s[0], "TRY FOLLOWING")
 				if len(subscribe_base) == 0:
+					logging(driver, 'Accounts_logs/Autosubscribe/', 0, 1, s_s[0], "PARSING")
+					autosubscribe_statistic = ["Parsing",count_of_realsubscribe, s_s[1]]
+					pdump("Accounts/" + s_s[0] + "/statistic/" + "autosubscribe.pkl", autosubscribe_statistic)
 					subscribe_base = parsing_first_type(driver, s_s[4], s_s[5])
 					pdump("Accounts/" + s_s[0] + "/databases/subscribe_base.pkl", subscribe_base)
 					time.sleep(r.randint(s_s[2], s_s[3]))
@@ -501,9 +504,7 @@ def autosubscribe_start(botname_subscribe, limitsubscribes, startinterval, endin
 					time.sleep(r.randint(s_s[2], s_s[3]))
 				else:
 					if count_of_realsubscribe != s_s[1]:
-						logging(driver, 'Accounts_logs/Autosubscribe/', 0, 1, s_s[0], "PARSING")
-						autosubscribe_statistic = ["Parsing",count_of_realsubscribe, s_s[1]]
-						pdump("Accounts/" + s_s[0] + "/statistic/" + "autosubscribe.pkl", autosubscribe_statistic)
+						continue
 					else:
 						logging(driver, 'Accounts_logs/Autosubscribe/', 0, 1, s_s[0], "END WORK")
 						autosubscribe_statistic = ["END WORK",count_of_realsubscribe, s_s[1]]
