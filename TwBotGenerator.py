@@ -942,10 +942,11 @@ while works:
 			pload("Accounts/" + x + "/settings/timers.pkl")
 			move('Accounts/' + x, "Accounts_banned/" + x)
 
-	for x in range(30):
-		os.system("cls")
-		print("PAUSE: " + str(30 - x))
+	while next_thread:
 		time.sleep(1)
+	print("PAUSE")
+	time.sleep(30)
+		
 
 # if works:
 #   Thread(target=autoposting_updater, args=("1")).start()
