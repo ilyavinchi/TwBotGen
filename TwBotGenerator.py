@@ -468,11 +468,7 @@ def autosubscribe_start(botname_subscribe, limitsubscribes, startinterval, endin
 					time.sleep(r.randint(s_s[2], s_s[3]))
 
 				driver.get("https://twitter.com/" + subscribe_base[0])
-				try:
-					wait(driver, "//div[@data-testid='placementTracking']", 60, 1).click()
-				except:
-					if driver.current_url == "https://twitter.com/account/access":
-						a = 1/0
+				wait(driver, "//div[@data-testid='placementTracking']", 60, 1).click()
 
 				try:
 					logging(driver, 'Accounts_logs/Autosubscribe/', 0, 1, s_s[0], "FIND ALLERT")
@@ -895,6 +891,7 @@ def account_gen():
 			return False    
 
 while works:
+	print("MAIN START")
 	for x in range(max_threads):
 		print("THREAD ID: " + str(x))
 		if not active_threads[x].is_alive():
@@ -945,7 +942,9 @@ while works:
 				time.sleep(1)
 			pload("Accounts/" + x + "/settings/timers.pkl")
 			move('Accounts/' + x, "Accounts_banned/" + x)
-	time.sleep(30)
+
+	for x in range(30):
+		print("PAUSE: " + str(30 - x))
 
 # if works:
 #   Thread(target=autoposting_updater, args=("1")).start()
