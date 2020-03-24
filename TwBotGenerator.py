@@ -941,6 +941,7 @@ while works:
 				time.sleep(1)
 			pload("Accounts/" + x + "/settings/timers.pkl")
 			move('Accounts/' + x, "Accounts_banned/" + x)
+			break
 
 	while next_thread:
 		time.sleep(1)
